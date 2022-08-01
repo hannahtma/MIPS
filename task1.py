@@ -29,9 +29,6 @@ elif consumption > 1000:
 if consumption > 600:
     total_cost = total_cost + ((consumption-600)*tier_two_price)
     consumption = 600
-else:
-    total_cost = total_cost + ((consumption-600)*(tier_two_price-2))
-    consumption = 600
 
 total_cost = total_cost + (consumption*tier_one_price)
 gst = total_cost // 10
