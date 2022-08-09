@@ -9,7 +9,7 @@ Template repository for use in Assignment 1.
 ## TODO
 
 - [x] Duplicate the template repository
-- [ ] Task 1
+- [x] Task 1
 - [ ] Task 2
 - [ ] Task 3
 - [ ] Task 4
