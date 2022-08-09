@@ -4,7 +4,7 @@ Template repository for use in Assignment 1.
 
 ## Members
 
-* John Smith jsmi0000@student.monash.edu
+* Hannah Tang Mei Ann htan0106@student.monash.edu
 
 ## TODO
 
