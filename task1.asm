@@ -21,12 +21,12 @@ consumption: .word 0
 total_cost: .word 0
 
 thousand: .word 1000
+six_hundred: .word 600
 consumption_difference: .word 0
 
 gst: .word 0
 total_bill: .word 0
 end: .asciiz "Mr Loki Laufeyson, your electricity bill is $"
-final_amount: .word 0
 
 newline: .asciiz "\n"
 
@@ -95,13 +95,6 @@ addi $t0, $0, 0
 sw $t0, discount_flag
 
 continue:
-la $a0, discount_flag
-addi $v0, $0, 1
-syscall
-la, $a0, newline
-addi, $v0, $0, 4
-syscall
-
 # Print "Enter your total consumption in kWh: "
 la $a0, consumption_prompt
 addi $v0, $0, 4
@@ -116,53 +109,110 @@ syscall
 sw $v0, consumption
 
 lw $t0, discount_flag
-beq $t0, $0, discounted
-bne $t0, $0, normal
+beq $t0, $0, normal
+bne $t0, $0, discounted
 
-discounted:
-lw $t0, consumption
-lw $t1, thousand
+normal:
+# Normal more than 1000kWh
+lw $t0, thousand
+lw $t1, consumption
 sub $t2, $t1, $t0
 sw $t2, consumption_difference
 
 lw $t0, consumption_difference
 slt $t1, $t0, $0 # if consumption_difference < 0, t1 = 1
-bne $t1, $0, normal
+bne $t1, $0, next
 
 lw $t0, consumption
-sub $t1, $t0, 1000
+lw $t1, thousand
+sub $t2, $t0, $t1
 lw $t0, tier_three_price
-mult $t0, $t1
-mflo $t2
+mult $t0, $t2
+mflo $t3
 lw $t0, total_cost
-add $t3, $t0, $t2
+add $t4, $t0, $t3
 sw $t4, total_cost
 
-lw $t0, consumption
-sub $t1, $t0, $t0
+lw $t0, thousand
 sw $t1, consumption
 
-normal:
+j next
+
+# Discounted more than 1000kWh
+discounted:
+lw $t0, thousand
+lw $t1, consumption
+sub $t2, $t1, $t0
+sw $t2, consumption_difference
+
+lw $t0, consumption_difference
+slt $t1, $t0, $0 # if consumption_difference < 0, t1 = 1
+bne $t1, $0, next
+
 lw $t0, consumption
-sub $t1, $t0, 1000
+lw $t1, thousand
+sub $t2, $t0, $t1
 lw $t0, tier_three_price
-sub $t2, $t0, 2
+subi $t1, $t0, 2
 mult $t1, $t2
 mflo $t3
 lw $t0, total_cost
-add $t4, $t3, $t0
-sw $t5, total_cost
+add $t4, $t0, $t3
+sw $t4, total_cost
+
+lw $t0, thousand
+sw $t0, consumption
+
+next:
+# more than 6003
+lw $t0, consumption
+lw $t1, six_hundred
+sub $t2, $t0, $t1
+sw $t2, consumption_difference
+
+lw $t0, consumption_difference
+slt $t1, $t0, $0 # if consumption_difference < 0, t1 = 1
+bne $t1, $0, finish
 
 lw $t0, consumption
-sub $t1, $t0, $t0
+lw $t1, six_hundred
+sub $t2, $t0, $t1
+lw $t0, tier_two_price
+mult $t0, $t2
+mflo $t3
+lw $t0, total_cost
+add $t4, $t0, $t3
+sw $t4, total_cost
+
+lw $t0, six_hundred
 sw $t1, consumption
+
+finish:
+lw $t0, consumption
+lw $t1, tier_one_price
+mult $t0, $t1
+mflo $t2
+lw $t0, total_cost
+add $t1, $t0, $t2
+sw $t1, total_cost
+
+lw $t0, total_cost
+addi $t1, $0, 10
+div $t0, $t1
+mflo $t0
+sw $t0, gst
+
+lw $t0, total_cost
+lw $t1, gst
+add $t2, $t1, $t0
+sw $t2, total_bill
 
 # Print final amount
 la $a0, end
 addi $v0, $0, 4
 syscall
-la, $a0, final_amount
-addi, $v0, $0, 1
+lw $a0, total_bill
+addi $v0, $0, 1
 syscall
 
 # End program
