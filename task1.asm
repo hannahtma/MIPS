@@ -27,7 +27,10 @@ consumption_difference: .word 0
 gst: .word 0
 total_bill: .word 0
 end: .asciiz "Mr Loki Laufeyson, your electricity bill is $"
+dollars: .word 0
+cents: .word 0
 
+fullstop: .asciiz "."
 newline: .asciiz "\n"
 
     .text
@@ -207,11 +210,29 @@ lw $t1, gst
 add $t2, $t1, $t0
 sw $t2, total_bill
 
+lw $t0, total_bill
+addi $t1, $0, 100
+div $t0, $t1
+mflo $t0
+sw $t0, dollars
+
+lw $t0, total_bill
+addi $t1, $0, 100
+div $t0, $t1
+mfhi $t0
+sw $t0, cents
+
 # Print final amount
 la $a0, end
 addi $v0, $0, 4
 syscall
-lw $a0, total_bill
+lw $a0, dollars
+addi $v0, $0, 1
+syscall
+la $a0, fullstop
+addi $v0, $0, 4
+syscall
+lw $a0, cents
 addi $v0, $0, 1
 syscall
 
