@@ -62,7 +62,14 @@ whilezero:
 	lw $t0, valid_input
 	addi $t0, $0, 1
 	sw $t0, valid_input
-
+	
+whileloop:
+	# While i < height:
+	lw $t0, i # i = 0
+	lw $t1, height # height = 5
+	slt $t2, $t0, $t1 # if t0 < t1, then t2 = 1
+	beq $t2, $0, end # if t2 = 0, branch to end
+	
 	lw $t0, height # load height
 	lw $t1, one
 	add $t2, $t1, $t0 # add 1 to height
@@ -71,29 +78,25 @@ whilezero:
 	mflo $t4
 	sw $t4, s # s = -5
 	
-continue:
-	# While i < height:
-	lw $t0, i # i = 0
-	lw $t1, height # height = 5
-	slt $t2, $t0, $t1 # if t0 < t1, then t2 = 1
-	beq $t2, $0, end # if t2 = 0, branch to end
-	
-	lw $t0, i
-	lw $t1, one
-	add $t2, $t1, $t0 
-	sw $t2, plusi # plusi = i + 1 = 1
-	
 	lw $t0, i
 	lw $t1, negativeone
 	mult $t0, $t1
 	mflo $t2
 	sw $t2, addheight # addheight = 0
 	
-firstloop:
+	lw $t0, i
+	lw $t1, one
+	add $t2, $t1, $t0 
+	sw $t2, plusi # plusi = i + 1 = 1
+	
+spaceloop:
+	lw $t0, zero
+        sw $t0, r
+        
 	lw $t0, s
 	lw $t1, addheight
 	slt $t2, $t0, $t1 # if t0 < t1, then t2 = 1
-	beq $t2, $0, secondloop # if t2 = 0, then branch to secondloop
+	beq $t2, $0, starloop # if t2 = 0, then branch to starloop
 	
 	la $a0, space
 	addi $v0, $0, 4
@@ -108,13 +111,13 @@ firstloop:
 	add $t2, $t0, $t1 # s += 1
 	sw $t2, s # s = -5
 	
-	j firstloop
+	j spaceloop
 	
-secondloop:
+starloop:
 	lw $t0, r
 	lw $t1, plusi
 	slt $t2, $t0, $t1 # if t0 < t1, then t2 = 1
-	beq $t2, $0, next # if t2 = 0, then branch to end
+	beq $t2, $0, continue # if t2 = 0, then branch to end
 	
 	lw $t0, i
 	beq $t0, $0, ifzero
@@ -129,6 +132,8 @@ secondloop:
         la $a0, emptystring
         syscall
         
+        j skipnotzero
+        
         notzero:
         la $a0, star
 	addi $v0, $0, 4
@@ -137,15 +142,16 @@ secondloop:
         la $a0, emptystring
         syscall
 	
+	skipnotzero:
 	# r += 1
 	lw $t0, r
 	lw $t1, one
 	add $t2, $t1, $t0
 	sw $t2, r
 	
-	j secondloop
+	j starloop
 	
-next:
+continue:
 	la $a0, newline
 	addi $v0, $0, 4
 	syscall
@@ -156,7 +162,7 @@ next:
         add $t2, $t0, $t1
         sw $t2, i
         
-        j continue
+        j whileloop
 	
 end:
 # End program
