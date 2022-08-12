@@ -15,9 +15,9 @@ height_difference: .word 0
 
 i: .word 0
 s: .word 0
+r: .word 0
 addheight: .word 0
 plusi: .word 0
-r: .word 0
 a: .asciiz "A "
 star: .asciiz "* "
 negativeone: .word -1
