@@ -3,6 +3,8 @@
     .data
 
 fill: .asciiz "You haven't started task 3 yet\n"
+smash_count: .word 0
+
 
     .text
 
