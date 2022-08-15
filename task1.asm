@@ -2,7 +2,6 @@
 
     .data
 
-fill: .asciiz "You haven't started task 1 yet\n"
 tier_one_price: .word 9
 tier_two_price: .word 11
 tier_three_price: .word 14
@@ -35,12 +34,11 @@ newline: .asciiz "\n"
 
     .text
 
-la $a0, fill
-addi $v0, $0, 4
-syscall
-
 # Print "Welcome to the Thor Electrical Company"
 la $a0, start
+addi $v0, $0, 4
+syscall
+la $a0, newline
 addi $v0, $0, 4
 syscall
 
