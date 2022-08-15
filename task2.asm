@@ -2,7 +2,6 @@
 
     .data
 
-fill: .asciiz "You haven't started task 2 yet\n"
 height: .word 0
 space: .asciiz " "
 emptystring: .asciiz ""
@@ -29,18 +28,11 @@ newline: .asciiz "\n"
 
     .text
 
-la $a0, fill
-addi $v0, $0, 4
-syscall
-
 # While valid_input == 0:
 whilezero:
 	
 	# Print "How tall do you want the tower: "
 	la $a0, height_prompt
-	addi $v0, $0, 4
-	syscall
-	la $a0, newline
 	addi $v0, $0, 4
 	syscall
 
@@ -104,8 +96,8 @@ spaceloop:
 	addi $v0, $0, 4
 	syscall
 	add $v0, $0, 4
-        la $a0, emptystring
-        syscall
+    la $a0, emptystring
+    syscall
 	
 	# s += 1
 	lw $t0, s
