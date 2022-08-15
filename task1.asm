@@ -8,7 +8,7 @@ tier_two_price: .word 11
 tier_three_price: .word 14
 discount_flag: .word 0
 
-start: .asciiz "Welcome to the Thor Electrical Company"
+start: .asciiz "Welcome to the Thor Electrical Company!"
 age_prompt: .asciiz "Enter your age: "
 age: .word 0
 
@@ -43,16 +43,10 @@ syscall
 la $a0, start
 addi $v0, $0, 4
 syscall
-la, $a0, newline
-addi, $v0, $0, 4
-syscall
 
 # Print "Enter your age: "
 la $a0, age_prompt
 addi $v0, $0, 4
-syscall
-la, $a0, newline
-addi, $v0, $0, 4
 syscall
 
 # Take input for age
@@ -101,9 +95,6 @@ continue:
 # Print "Enter your total consumption in kWh: "
 la $a0, consumption_prompt
 addi $v0, $0, 4
-syscall
-la, $a0, newline
-addi, $v0, $0, 4
 syscall
 
 # Take input for consumption
@@ -167,7 +158,7 @@ lw $t0, thousand
 sw $t0, consumption
 
 next:
-# more than 6003
+# more than 600
 lw $t0, consumption
 lw $t1, six_hundred
 sub $t2, $t0, $t1
