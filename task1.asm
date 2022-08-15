@@ -224,6 +224,9 @@ syscall
 lw $a0, cents
 addi $v0, $0, 1
 syscall
+la $a0, newline
+addi $v0, $0, 4
+syscall
 
 # End program
 addi $v0, $0, 10
