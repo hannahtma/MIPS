@@ -50,24 +50,24 @@ smash_or_sad:	# smash_or_sad function
 		lw $t0, -4($fp)
 		sw $0, -4($fp)
 		
-		whileloop:
+		whileloop:		
 		# While i < len(the_list)
-		lw $t0, -4($fp) # Load i
-		lw $t1, +12($fp) # Load len(the_list)
-		slt $t2, $t0, $t1 # If t0 < t1, then t2 = 1
+		lw $t0, +12($fp)
+		lw $t1, ($t0)
+		lw $t0, -4($fp)
+		slt $t2, $t0, $t1
 		beq $t2, $0, end
-		
+
 		# the_list[i]
-		lw $t0, -4($fp) # Load i
+		lw $t0, -4($fp) # t0 = i
+		lw $t1, +12($fp)
 		sll $t0, $t0, 2 # t0 = 4*t0
-		la $t1, +12($fp) # t1 = address of array
-		add $t0, $t1, $t0 # Add the value 
-		lw $t2, 4($t0) # t2 = the_list[i]
+		add $t0, $t0, $t1
+		lw $a0, 4($t0)
 		
-		# If the_list[i] <= hulk_power
 		lw $t3, +8($fp) # t3 = hulk_power
-		slt $t4, $t2, $t3 # If t2 < t3 (the_list[i] < hulk_power), then t4 = 1
-		beq $t4, $0, hulksad # Branch if t4 = 0
+		slt $t4, $t3, $a0 # If t2 < t3 (the_list[i] < hulk_power), then t4 = 1
+		bne $t4, $0, hulksad # Branch if t4 = 0
 
 		# Print "Hulk SMASH! >:("
 		la $a0, hulk_smash
@@ -77,6 +77,7 @@ smash_or_sad:	# smash_or_sad function
 		addi $v0, $0, 4
 		syscall
 		
+		# smash_count += 1
 		lw $t0, -8($fp)
 		addi $t0, $t0, 1
 		sw $t0, -8($fp)
@@ -93,6 +94,7 @@ smash_or_sad:	# smash_or_sad function
 		syscall
 		
 		continue:
+		# i += 1
 		lw $t0, -4($fp)
 		addi $t0, $t0, 1
 		sw $t0, -4($fp)
@@ -174,15 +176,17 @@ main:
 	# Clears arguments off stack
 	addi $sp, $sp, 8
 	
-	add $a0, $v0, $0
+	addi $a0, $v0, 0
+	
 	
 	la $a0, front_output
 	addi $v0, $0, 4
 	syscall
 	
 	# Print the return value
-	addi $v0, $0, 1
-	syscall
+	addi $a0, $t0, 0
+        addi $v0, $0, 1
+        syscall
 	
 	la $a0, back_output
 	add $v0, $0, 4
@@ -193,5 +197,4 @@ main:
 	
 	addi $v0, $0, 10
 	syscall
-	
 	
