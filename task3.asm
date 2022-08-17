@@ -202,6 +202,11 @@ main:
 	add $v0, $0, 4
 	syscall
 	
+	addi $sp, $sp, +4
+        lw $ra, ($sp)
+       	addi $sp, $sp, +4
+        lw $fp, ($sp)
+	
 	addi $v0, $0, 10
 	syscall
 	
