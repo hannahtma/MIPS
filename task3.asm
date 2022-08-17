@@ -202,6 +202,13 @@ main:
 	add $v0, $0, 4
 	syscall
 	
+	addi $sp, $sp, +4
+		sw $ra, ($sp)
+		
+		# Save value of $fp on stack
+		addi $sp, $sp, +4
+		sw $fp, ($sp)
+	
 	addi $v0, $0, 10
 	syscall
 	
