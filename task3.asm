@@ -107,6 +107,9 @@ smash_or_sad:	# smash_or_sad function
 		# Clear local variables off stack
 		addi $sp, $sp, 16
 		
+		lw $ra, +4($fp)
+		lw $fp, ($fp)
+		
 		# Restores saved $fp off stack
 		lw $fp, ($sp)
 		addi $sp, $sp, +4
@@ -129,6 +132,9 @@ main:
 
 	# Copy $sp to $fp
 	addi $fp, $sp, 0
+	
+	sw $ra, +4($fp)
+	sw $fp, 0($fp)
 	
 	# Allocate local variables on stack
 	addi $sp, $sp, -8
@@ -171,7 +177,9 @@ main:
 	# Call function smash_or_sad
 	jal smash_or_sad
 	
-	# Clears arguments off stack
+	# Reload
+	
+	# Clears arguments off stack deallocate
 	addi $sp, $sp, 8
 	
 	addi $a0, $v0, 0
