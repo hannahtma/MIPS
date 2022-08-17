@@ -18,30 +18,42 @@ smash_or_sad:	# smash_or_sad function
             # i                  -   -4($fp) #
             # fp                 -    0($fp) #
             # ra                 -   +4($fp) #
-            # the_list           -   +8($fp) #
-            # hulk_power         -  +12($fp) #
+            # hulk_power         -   +8($fp) #
+            # the_list           -  +12($fp) #
             ##################################
 
 		whileloop:
+		# Save value of $ra on stack
 		addi $sp, $sp, -4
 		sw $ra, ($sp)
+		
+		# Save value of $fp on stack
 		addi $sp, $sp, -4
 		sw $fp, ($sp)
+		
+		# Copy $sp to $fp
 		addi $fp, $sp, 0
+		
+		# Allocate local variables on stack
 		addi $sp, $sp, -16
 		
+		# smash_count = 0
 		lw $t0, -8($fp)
 		sw $0, -8($fp)
 		
+		# i = 0
 		lw $t0, -4($fp)
 		sw $0, -4($fp)
 		
+		# While i < len(the_list)
 		lw $t0, -4($fp)
-		lw $t1, +8($fp)
+		lw $t1, +12($fp)
 		slt $t2, $t0, $t1 # If t0 < t1, then t2 = 1
 		beq $t2, $0, end
 		
-		lw $t1, +12($fp)
+		# if the_list[i] <= hulk_power
+		lw $t0, -4($fp)
+		lw $t1, +8($fp)
 		sub $t2, $t1, $t0 # $t2 = $t1 - $t0
 		slt $t3, $t2, $0 # If t2 < 0, then t3 = 1
 		bne $t3 $0, equalsone # Branch if t3 = 1 (t3 >= 0)
