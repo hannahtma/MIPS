@@ -203,11 +203,9 @@ main:
 	syscall
 	
 	addi $sp, $sp, +4
-		sw $ra, ($sp)
-		
-		# Save value of $fp on stack
-		addi $sp, $sp, +4
-		sw $fp, ($sp)
+	lw $ra, ($sp)
+	addi $sp, $sp, +4
+	lw $fp, ($sp)
 	
 	addi $v0, $0, 10
 	syscall
