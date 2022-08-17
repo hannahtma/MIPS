@@ -1,5 +1,5 @@
 # Your job to fill in! :)
-.globl smash_or_sad
+
     .data
 
 hulk_smash: .asciiz "Hulk SMASH! >:("
@@ -11,6 +11,8 @@ back_output: .asciiz " people"
 newline: .asciiz "\n"
 
     .text
+    
+    .globl smash_or_sad
 
 jal main    
 
@@ -114,11 +116,6 @@ smash_or_sad:	# smash_or_sad function
 		# Restores saved $ra off stack
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
-		
-		addi $sp, $sp, +4
-        	lw $ra, ($sp)
-        	addi $sp, $sp, +4
-        	lw $fp, ($sp)
 
 		jr $ra
 
@@ -132,10 +129,13 @@ main:
             # fp                 -    0($fp) #
             ##################################
 
-	addi $sp, $sp, -4
-	sw $ra, ($sp)
-	addi $sp, $sp, -4
-	sw $fp, ($sp)
+	# Save value of $ra on stack
+		addi $sp, $sp, -4
+		sw $ra, ($sp)
+		
+		# Save value of $fp on stack
+		addi $sp, $sp, -4
+		sw $fp, ($sp)
 	
 	# Copy $sp to $fp
 	addi $fp, $sp, 0
@@ -181,7 +181,7 @@ main:
 	# Call function smash_or_sad
 	jal smash_or_sad
 	
-	# Clears arguments off stack deallocate
+	# Clears arguments off stack
 	addi $sp, $sp, 8
 	
 	addi $a0, $v0, 0
@@ -201,11 +201,6 @@ main:
 	la $a0, newline
 	add $v0, $0, 4
 	syscall
-	
-	addi $sp, $sp, +4
-        lw $ra, ($sp)
-       	addi $sp, $sp, +4
-        lw $fp, ($sp)
 	
 	addi $v0, $0, 10
 	syscall
