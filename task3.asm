@@ -1,5 +1,5 @@
 # Your job to fill in! :)
-
+.globl smash_or_sad
     .data
 
 hulk_smash: .asciiz "Hulk SMASH! >:("
@@ -11,8 +11,6 @@ back_output: .asciiz " people"
 newline: .asciiz "\n"
 
     .text
-    
-    .globl smash_or_sad
 
 jal main    
 
