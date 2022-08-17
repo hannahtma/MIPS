@@ -1,6 +1,6 @@
 # Your job to fill in! :)
 
-	.globl smash_or_sad
+    .globl smash_or_sad
 
     .data
 
@@ -22,6 +22,7 @@ smash_or_sad:	# smash_or_sad function
             # hulk_power         -  +12($fp) #
             ##################################
 
+		whileloop:
 		addi $sp, $sp, -4
 		sw $ra, ($sp)
 		addi $sp, $sp, -4
@@ -88,6 +89,8 @@ smash_or_sad:	# smash_or_sad function
 		addi $sp, $sp, +4
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
+		
+		j whileloop
 
 		# End program
 		end:
