@@ -10,6 +10,9 @@ hulk_sad: .asciiz "Hulk Sad :("
 newline: .asciiz "\n"
 
     .text
+
+jal main    
+
 smash_or_sad:	# smash_or_sad function
 
                     # memory diagram
