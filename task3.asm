@@ -115,11 +115,10 @@ smash_or_sad:	# smash_or_sad function
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
 		
-		
 		addi $sp, $sp, +4
-        	sw $ra, ($sp)
+        	lw $ra, ($sp)
         	addi $sp, $sp, +4
-        	sw $fp, ($sp)
+        	lw $fp, ($sp)
 
 		jr $ra
 
