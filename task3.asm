@@ -61,7 +61,6 @@ smash_or_sad:	# smash_or_sad function
 		slt $t3, $t2, $0 # If t2 < 0, then t3 = 1
 		bne $t3 $0, equalsone # Branch if t3 = 1 (t3 >= 0)
 		beq $t3, $0, equalszero # Branch if t3 = 0
-		beq $t2, $0, equalszero
 		
 		equalsone:
 		# Print "Hulk SMASH! >:("
@@ -79,6 +78,7 @@ smash_or_sad:	# smash_or_sad function
 		j arrayloop
 		
 		equalszero:
+		beq $t2, $0, equalszero
 		# Print "Hulk Sad :("
 		la $a0, hulk_sad
 		addi $v0, $0, 4
@@ -121,9 +121,10 @@ main:
             # fp                 -    0($fp) #
             ##################################
 
-	addi $sp, $sp, -4
-	sw $fp, ($sp)
+	# Copy $sp to $fp
 	addi $fp, $sp, 0
+	
+	# Allocate local variables on stack
 	addi $sp, $sp, -8
 	
 	addi $a0, $0, 16
@@ -131,6 +132,7 @@ main:
 	syscall
 	sw $v0, -4($fp)
 	
+	# Set array = [10, 14, 16]
 	lw $t0, -4($fp)
 	
 	addi $t1, $0, 3
@@ -145,9 +147,35 @@ main:
 	addi $t1, $0, 16
 	sw $t1, 12($t0)
 	
+	# Store hulk_power = 15
 	lw $t0, -8($fp)
 	addi $t0, $0, 15
 	sw $t0, -8($fp)
 	
+	# Pass list_of_numbers into arg the_list
+	addi $sp $sp, -4
+	lw $t0, -4($fp)
+	sw $t0, ($sp)
+	
+	# Pass hulk_power into arg hulk_power
+	addi $sp, $sp, -4
+	lw $t0, -8($fp)
+	sw $t0, ($sp)
+	
+	# Call function smash_or_sad
 	jal smash_or_sad
+	
+	# Clears arguments off stack
+	addi $sp, $sp, 8
+	
+	add $a0, $v0, $0
+	addi $v0, $0, 1
+	syscall
+	la $a0, newline
+	add $v0, $0, 4
+	syscall
+	
+	addi $v0, $0, 10
+	syscall
+	
 	
