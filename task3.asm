@@ -1,15 +1,18 @@
 # Your job to fill in! :)
 
-    .globl smash_or_sad
-
     .data
 
 hulk_smash: .asciiz "Hulk SMASH! >:("
 hulk_sad: .asciiz "Hulk Sad :("
 
+front_output: .asciiz "Hulk smashed "
+back_output: .asciiz " people"
+
 newline: .asciiz "\n"
 
     .text
+    
+    .globl smash_or_sad
 
 jal main    
 
@@ -25,7 +28,6 @@ smash_or_sad:	# smash_or_sad function
             # the_list           -  +12($fp) #
             ##################################
 
-		whileloop:
 		# Save value of $ra on stack
 		addi $sp, $sp, -4
 		sw $ra, ($sp)
@@ -48,21 +50,25 @@ smash_or_sad:	# smash_or_sad function
 		lw $t0, -4($fp)
 		sw $0, -4($fp)
 		
+		whileloop:
 		# While i < len(the_list)
-		lw $t0, -4($fp)
-		lw $t1, +12($fp)
+		lw $t0, -4($fp) # Load i
+		lw $t1, +12($fp) # Load len(the_list)
 		slt $t2, $t0, $t1 # If t0 < t1, then t2 = 1
 		beq $t2, $0, end
 		
-		# if the_list[i] <= hulk_power
-		lw $t0, -4($fp)
-		lw $t1, +8($fp)
-		sub $t2, $t1, $t0 # $t2 = $t1 - $t0
-		slt $t3, $t2, $0 # If t2 < 0, then t3 = 1
-		bne $t3 $0, equalsone # Branch if t3 = 1 (t3 >= 0)
-		beq $t3, $0, equalszero # Branch if t3 = 0
+		# the_list[i]
+		lw $t0, -4($fp) # Load i
+		sll $t0, $t0, 2 # t0 = 4*t0
+		la $t1, +12($fp) # t1 = address of array
+		add $t0, $t1, $t0 # Add the value 
+		lw $t2, 4($t0) # t2 = the_list[i]
 		
-		equalsone:
+		# If the_list[i] <= hulk_power
+		lw $t3, +8($fp) # t3 = hulk_power
+		slt $t4, $t2, $t3 # If t2 < t3 (the_list[i] < hulk_power), then t4 = 1
+		beq $t4, $0, hulksad # Branch if t4 = 0
+
 		# Print "Hulk SMASH! >:("
 		la $a0, hulk_smash
 		addi $v0, $0, 4
@@ -75,10 +81,9 @@ smash_or_sad:	# smash_or_sad function
 		addi $t0, $t0, 1
 		sw $t0, -8($fp)
 		
-		j arrayloop
+		j continue
 		
-		equalszero:
-		beq $t2, $0, equalszero
+		hulksad:
 		# Print "Hulk Sad :("
 		la $a0, hulk_sad
 		addi $v0, $0, 4
@@ -87,28 +92,29 @@ smash_or_sad:	# smash_or_sad function
 		addi $v0, $0, 4
 		syscall
 		
-		arrayloop:
-		lw $t0, -4($fp)
-		addi $t0, $t0, 4
-		sw $t0, -4($fp)
-		
+		continue:
 		lw $t0, -4($fp)
 		addi $t0, $t0, 1
 		sw $t0, -4($fp)
 		
-		lw $t0, -8($fp)
-		mflo $v0
+		j whileloop
 		
+		end:
+		# Set $v0 to return value
+		lw $t0, -8($fp)
+		addi $v0, $t0, 0
+		
+		# Clear local variables off stack
 		addi $sp, $sp, 16
+		
+		# Restores saved $fp off stack
 		lw $fp, ($sp)
 		addi $sp, $sp, +4
+		
+		# Restores saved $ra off stack
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
-		
-		j whileloop
 
-		# End program
-		end:
 		jr $ra
 
 # Main
@@ -169,7 +175,17 @@ main:
 	addi $sp, $sp, 8
 	
 	add $a0, $v0, $0
+	
+	la $a0, front_output
+	addi $v0, $0, 4
+	syscall
+	
+	# Print the return value
 	addi $v0, $0, 1
+	syscall
+	
+	la $a0, back_output
+	add $v0, $0, 4
 	syscall
 	la $a0, newline
 	add $v0, $0, 4
