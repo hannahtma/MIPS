@@ -130,12 +130,12 @@ main:
             ##################################
 
 	# Save value of $ra on stack
-		addi $sp, $sp, -4
-		sw $ra, ($sp)
+	addi $sp, $sp, -4
+	sw $ra, ($sp)
 		
-		# Save value of $fp on stack
-		addi $sp, $sp, -4
-		sw $fp, ($sp)
+	# Save value of $fp on stack
+	addi $sp, $sp, -4
+	sw $fp, ($sp)
 	
 	# Copy $sp to $fp
 	addi $fp, $sp, 0
@@ -184,7 +184,7 @@ main:
 	# Clears arguments off stack
 	addi $sp, $sp, 8
 	
-	addi $a0, $v0, 0
+	#addi $a0, $v0, 0#
 	
 	la $a0, front_output
 	addi $v0, $0, 4
