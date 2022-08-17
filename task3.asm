@@ -40,7 +40,7 @@ smash_or_sad:	# smash_or_sad function
 		addi $fp, $sp, 0
 		
 		# Allocate local variables on stack
-		addi $sp, $sp, -16
+		addi $sp, $sp, -8
 		
 		# smash_count = 0
 		lw $t0, -8($fp)
@@ -107,20 +107,15 @@ smash_or_sad:	# smash_or_sad function
 		addi $v0, $t0, 0
 		
 		# Clear local variables off stack
-		addi $sp, $sp, 16
+		addi $sp, $sp, 8
 		
-		# Restores saved $fp off stack
+		# Restores saved $fp off stack (deallocate)
 		lw $fp, ($sp)
 		addi $sp, $sp, +4
 		
-		# Restores saved $ra off stack
+		# Restores saved $ra off stack (deallocate)
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
-		
-		addi $sp, $sp, -4
-		lw $fp, ($sp)
-		addi $sp, $sp, -4
-		lw $ra, ($sp)
 
 		jr $ra
 
@@ -207,10 +202,10 @@ main:
 	add $v0, $0, 4
 	syscall
 	
-	addi $sp, $sp, -4
-	lw $fp, ($sp)	
-	addi $sp, $sp, -4
 	lw $ra, ($sp)	
+	addi $sp, $sp, +4
+	lw $fp, ($sp)
+	addi $sp, $sp, +4
 	
 	addi $v0, $0, 10
 	syscall
