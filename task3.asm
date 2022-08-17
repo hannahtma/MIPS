@@ -102,7 +102,7 @@ smash_or_sad:	# smash_or_sad function
 		j whileloop
 		
 		end:
-		# Set $v0 to return value
+		# Set $v0 = smash_count
 		lw $t0, -8($fp)
 		addi $v0, $t0, 0
 		
@@ -116,11 +116,6 @@ smash_or_sad:	# smash_or_sad function
 		# Restores saved $ra off stack
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
-
-		lw $ra, ($sp)
-	addi $sp, $sp, +4
-	lw $fp, ($sp)
-	addi $sp, $sp, +4
 
 		jr $ra
 
@@ -189,7 +184,7 @@ main:
 	# Clears arguments off stack
 	addi $sp, $sp, 8
 	
-	addi $a0, $v0, 0
+	#addi $a0, $v0, 0#
 	
 	la $a0, front_output
 	addi $v0, $0, 4
@@ -207,10 +202,10 @@ main:
 	add $v0, $0, 4
 	syscall
 	
-	lw $ra, ($sp)
 	addi $sp, $sp, +4
-	lw $fp, ($sp)
+	lw $fp, ($sp)	
 	addi $sp, $sp, +4
+	lw $ra, ($sp)	
 	
 	addi $v0, $0, 10
 	syscall
