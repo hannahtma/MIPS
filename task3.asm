@@ -116,6 +116,11 @@ smash_or_sad:	# smash_or_sad function
 		# Restores saved $ra off stack
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
+		
+		addi $sp, $sp, -4
+		lw $fp, ($sp)
+		addi $sp, $sp, -4
+		lw $ra, ($sp)
 
 		jr $ra
 
