@@ -133,9 +133,9 @@ main:
             # fp                 -    0($fp) #
             ##################################
 
-	addi $sp, $sp, +4
+	addi $sp, $sp, -4
 	sw $ra, ($sp)
-	addi $sp, $sp, +4
+	addi $sp, $sp, -4
 	sw $fp, ($sp)
 	
 	# Copy $sp to $fp
@@ -186,7 +186,6 @@ main:
 	addi $sp, $sp, 8
 	
 	addi $a0, $v0, 0
-	
 	
 	la $a0, front_output
 	addi $v0, $0, 4
