@@ -1,5 +1,7 @@
 # Your job to fill in! :)
 
+	.globl smash_or_sad
+
     .data
 
 hulk_smash: .asciiz "Hulk SMASH! >:("
