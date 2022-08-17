@@ -40,15 +40,14 @@ smash_or_sad:	# smash_or_sad function
 		slt $t2, $t0, $t1 # If t0 < t1, then t2 = 1
 		beq $t2, $0, end
 		
-		arrayloop:
-		lw $t0, -4($fp)
-		addi $t0, $t0, 4
-		sw $t0, -4($fp)
 		lw $t1, +12($fp)
 		sub $t2, $t1, $t0 # $t2 = $t1 - $t0
 		slt $t3, $t2, $0 # If t2 < 0, then t3 = 1
-		bne $t3 $0, equalsone # Branch if t3 = 0 (t3 >= 0)
+		bne $t3 $0, equalsone # Branch if t3 = 1 (t3 >= 0)
+		beq $t3, $0, equalszero # Branch if t3 = 0
+		beq $t2, $0, equalszero
 		
+		equalsone:
 		# Print "Hulk SMASH! >:("
 		la $a0, hulk_smash
 		addi $v0, $0, 4
@@ -61,7 +60,9 @@ smash_or_sad:	# smash_or_sad function
 		addi $t0, $t0, 1
 		sw $t0, -8($fp)
 		
-		equalsone:
+		j arrayloop
+		
+		equalszero:
 		# Print "Hulk Sad :("
 		la $a0, hulk_sad
 		addi $v0, $0, 4
@@ -69,6 +70,11 @@ smash_or_sad:	# smash_or_sad function
 		la $a0, newline
 		addi $v0, $0, 4
 		syscall
+		
+		arrayloop:
+		lw $t0, -4($fp)
+		addi $t0, $t0, 4
+		sw $t0, -4($fp)
 		
 		lw $t0, -4($fp)
 		addi $t0, $t0, 1
