@@ -107,9 +107,6 @@ smash_or_sad:	# smash_or_sad function
 		# Clear local variables off stack
 		addi $sp, $sp, 16
 		
-		lw $ra, +4($fp)
-		lw $fp, ($fp)
-		
 		# Restores saved $fp off stack
 		lw $fp, ($sp)
 		addi $sp, $sp, +4
@@ -117,6 +114,9 @@ smash_or_sad:	# smash_or_sad function
 		# Restores saved $ra off stack
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
+
+		lw $ra, +4($fp)
+		lw $fp, ($fp)
 
 		jr $ra
 
@@ -130,11 +130,11 @@ main:
             # fp                 -    0($fp) #
             ##################################
 
-	# Copy $sp to $fp
-	addi $fp, $sp, 0
-	
 	sw $ra, +4($fp)
 	sw $fp, 0($fp)
+	
+	# Copy $sp to $fp
+	addi $fp, $sp, 0
 	
 	# Allocate local variables on stack
 	addi $sp, $sp, -8
