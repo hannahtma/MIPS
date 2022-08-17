@@ -117,6 +117,11 @@ smash_or_sad:	# smash_or_sad function
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
 
+		lw $ra, ($sp)
+	addi $sp, $sp, +4
+	lw $fp, ($sp)
+	addi $sp, $sp, +4
+
 		jr $ra
 
 # Main
@@ -202,10 +207,10 @@ main:
 	add $v0, $0, 4
 	syscall
 	
-	addi $sp, $sp, +4
 	lw $ra, ($sp)
 	addi $sp, $sp, +4
 	lw $fp, ($sp)
+	addi $sp, $sp, +4
 	
 	addi $v0, $0, 10
 	syscall
