@@ -177,8 +177,6 @@ main:
 	# Call function smash_or_sad
 	jal smash_or_sad
 	
-	# Reload
-	
 	# Clears arguments off stack deallocate
 	addi $sp, $sp, 8
 	
