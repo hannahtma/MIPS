@@ -130,8 +130,10 @@ main:
             # fp                 -    0($fp) #
             ##################################
 
-	sw $ra, +4($fp)
-	sw $fp, 0($fp)
+	addi $sp, $sp, +4
+	sw $ra, ($sp)
+	addi $sp, $sp, +4
+	sw $fp, ($sp)
 	
 	# Copy $sp to $fp
 	addi $fp, $sp, 0
