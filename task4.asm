@@ -44,83 +44,85 @@ insertion_sort:
 		sw $t1, -8($fp)
 		
 		# Set i = 1
-		lw $t0, -4($fp)
-		addi $t0, $0, 1
-		sw $t0, -4($fp)
+		lw $t0, -4($fp) # Load i into t0
+		addi $t0, $0, 1 # Add 1 to t0
+		sw $t0, -4($fp) # Store t0 into i
 		
 		gothroughthelist:	
 			# While i < length
-			lw $t0, -4($fp)
-			lw $t1, -8($fp)
+			lw $t0, -4($fp) # Load i into t0
+			lw $t1, -8($fp) # Load length into t1
 			slt $t2, $t0, $t1 # If i < length, then t2 = 1
-			beq $t2, $0, finish
+			beq $t2, $0, finish # If t2 = 0, then branch to finish
 		
 			# key = the_list[i]
-			lw $t0, -4($fp) # t0 = i
-			lw $t1, +8($fp)
+			lw $t0, -4($fp) # Load i into t0
+			lw $t1, +8($fp) # Load the_list
 			sll $t0, $t0, 2 # t0 = 4*t0
-			add $t0, $t0, $t1
-			lw $a0, 4($t0)
-			sw $a0, -12($fp)
+			add $t0, $t0, $t1 # t0 = the_list[i] - 4
+			lw $t1, 4($t0) # a0 = the_list[i]
+			sw $t1, -12($fp) # Store a0 into key
 
 			# j = i - 1
-			lw $t0, -4($fp)
-			addi $t0, $0 -1
-			sw $t0, -16($fp)
+			lw $t0, -4($fp) # Load i into t0
+			addi $t0, $0 -1 # Add -1 to i
+			sw $t0, -16($fp) # Store t0 into j
 		
 			while:
-			# while j >= 0 and  key < the_list[j]
-			lw $t0, 0
-			lw $t1, -16($fp)
-			slt $t2, $t1, $t0
-			beq $t2, $0, continue
+				# while j >= 0 and  key < the_list[j]
+				lw $t0, -16($fp) # Load j into t0
+				slt $t1, $t0, $0 # If t0 >= 0, then t1 = 1
+				beq $t1, $0, continue
 			
-			lw $t0, -12($fp) # t0 = key
-			lw $t1, -4($fp) # t0 = j
-			lw $t3, +8($fp)
-			sll $t1, $t1, 2 # t0 = 4*t0
-			add $t1, $t1, $t3
-			lw $a0, 4($t0)
+				lw $t0, -12($fp) # t0 = key
+				lw $t1, -4($fp) # t0 = j
+				lw $t3, +8($fp)
+				sll $t1, $t1, 2 # t0 = 4*t0
+				add $t1, $t1, $t3
+				la $a0, 4($t0)
 			
-			slt $t4, $t0, $a0
-			beq $t4, $0, continue
+				slt $t4, $t0, $a0
+				beq $t4, $0, continue
 			
-			# the_list[j+1] = the_list[j]
-			lw $t0, -16($fp) # t0 = j
-			lw $t1, +8($fp)
-			sll $t0, $t0, 2 # t0 = 4*t0
-			add $t1, $t1, $t3
-			lw $a0, 4($t0)
+				# the_list[j+1] = the_list[j]
+				lw $t0, -16($fp) # t0 = j
+				sll $t0, $t0, 2 # t0 = 4*t0
+				la $t1, +8($fp)
+				add $t0, $t0, $t1
+				lw $t0, 4($t0)
 			
-			lw $t0, -16($fp)
-			addi $t0, $t0, 1
-			sll $t0, $t0, 2
-			la $t1, +8($fp)
-			add $t0, $t1, $t0
-			lw $t2, 4($t0)
+				lw $t1, -16($fp)
+				addi $t1, $t1, 1
+				sll $t1, $t1, 2
+				la $t2, +8($fp)
+				add $t1, $t2, $t1
+				lw $t1, 4($t1)
+				sw $t1, 4($t0)
 			
-			lw $t0, +8($fp)
-			lw $t1, 4($t0)
-			sw $t1, $a0
+				# j -= 1
+				lw $t0, -16($fp)
+				addi $t0, $t0, -1
+				sw $t0, -16($fp)
 			
-			# j -= 1
-			lw $t0, -16($fp)
-			addi $t0, $t0, -1
-			sw $t0, -15($fp)
-			
-			j while
+				j while
 			
 			continue:
-			# the_list[j+1] = key
-			TODO
+				# the_list[j+1] = key
+				lw $t0, -12($fp)
+				lw $t1, -16($fp)
+				lw $t2, +8($fp)
+				sll $t1, $t1, 2
+				add $t1, $t1, $t2
+				lw $a0, 4($t0)
+				sll $a0, $t0, 2
 			
-			# i += 1
-			lw $t0, -4($fp)
-			addi $t0, $0, 1
-			sw $t0, -4($fp)
+				# i += 1
+				lw $t0, -4($fp)
+				addi $t0, $0, 1
+				sw $t0, -4($fp)
 			
-			# jump back to whileloop
-			j gothroughthelist
+				# jump back to whileloop
+				j gothroughthelist
 		
 		finish:
 			# Clear local variables off stack
@@ -167,7 +169,7 @@ main:
 	# Set arr = [6, -2, 7, 4, -10]
 	lw $t0, -4($fp)
 	
-	addi $t1, $0, 6
+	addi $t1, $0, 5
 	sw $t1, ($t0)
 	
 	addi $t1, $0, 6
@@ -211,7 +213,7 @@ main:
 		add $t0, $t0, $t1
 		lw $a0, 4($t0)
 		
-		lw $a0, $a0, 0
+		addi $a0, $a0, 0
 		addi $v0, $0, 1
 		syscall
 		add $v0, $0, 4
