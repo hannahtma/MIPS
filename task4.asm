@@ -17,8 +17,8 @@ insertion_sort:
             	##################################
             	# j                  -  -16($fp) #
             	# key                -  -12($fp) #
-            	# length    	     -   -8($fp) #
-            	# i                  -   -4($fp) #
+            	# i	    	     -   -8($fp) #
+            	# length             -   -4($fp) #
             	# fp                 -    0($fp) #
             	# ra                 -   +4($fp) #
             	# the_list           -   +8($fp) #
@@ -44,19 +44,19 @@ insertion_sort:
 		sw $t1, -8($fp)
 		
 		# Set i = 1
-		lw $t0, -4($fp) # Load i into t0
+		lw $t0, -8($fp) # Load i into t0
 		addi $t0, $0, 1 # Add 1 to t0
-		sw $t0, -4($fp) # Store t0 into i
+		sw $t0, -8($fp) # Store t0 into i
 		
 		gothroughthelist:	
 			# While i < length
-			lw $t0, -4($fp) # Load i into t0
+			lw $t0, -8($fp) # Load i into t0
 			lw $t1, -8($fp) # Load length into t1
 			slt $t2, $t0, $t1 # If i < length, then t2 = 1
 			beq $t2, $0, finish # If t2 = 0, then branch to finish
 		
 			# key = the_list[i]
-			lw $t0, -4($fp) # Load i into t0
+			lw $t0, -8($fp) # Load i into t0
 			lw $t1, +8($fp) # Load the_list
 			sll $t0, $t0, 2 # t0 = 4*t0
 			add $t0, $t0, $t1 # t0 = the_list[i] - 4
@@ -64,7 +64,7 @@ insertion_sort:
 			sw $t1, -12($fp) # Store a0 into key
 
 			# j = i - 1
-			lw $t0, -4($fp) # Load i into t0
+			lw $t0, -8($fp) # Load i into t0
 			addi $t0, $0 -1 # Add -1 to i
 			sw $t0, -16($fp) # Store t0 into j
 		
@@ -75,7 +75,7 @@ insertion_sort:
 				beq $t1, $0, continue
 			
 				lw $t0, -12($fp) # t0 = key
-				lw $t1, -4($fp) # t0 = j
+				lw $t1, -8($fp) # t0 = j
 				lw $t3, +8($fp)
 				sll $t1, $t1, 2 # t0 = 4*t0
 				add $t1, $t1, $t3
@@ -117,9 +117,9 @@ insertion_sort:
 				sll $a0, $t0, 2
 			
 				# i += 1
-				lw $t0, -4($fp)
+				lw $t0, -8($fp)
 				addi $t0, $0, 1
-				sw $t0, -4($fp)
+				sw $t0, -8($fp)
 			
 				# jump back to whileloop
 				j gothroughthelist
