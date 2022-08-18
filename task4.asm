@@ -15,13 +15,13 @@ insertion_sort:
 
                    	# memory diagram
             	##################################
-            	# j                  -  -12($fp) #
-            	# key                -   -8($fp) #
-            	# length    	     -   -4($fp) #
+            	# j                  -  -16($fp) #
+            	# key                -  -12($fp) #
+            	# length    	     -   -8($fp) #
+            	# i                  -   -4($fp) #
             	# fp                 -    0($fp) #
             	# ra                 -   +4($fp) #
             	# the_list           -   +8($fp) #
-            	# i                  -  +12($fp) #
             	##################################
 
 		# Save value of $ra on stack
@@ -41,41 +41,41 @@ insertion_sort:
 		# length = len(the_list)
 		lw $t0, +8($fp) 
 		lw $t1, ($t0) # len(this_list)
-		sw $t1, -4($fp)
+		sw $t1, -8($fp)
 		
 		# Set i = 1
-		lw $t0, +12($fp) # Load i into t0
+		lw $t0, -4($fp) # Load i into t0
 		addi $t0, $0, 1 # Add 1 to t0
-		sw $t0, +12($fp) # Store t0 into i
+		sw $t0, -4($fp) # Store t0 into i
 		
 		gothroughthelist:	
 			# While i < length
-			lw $t0, +12($fp) # Load i into t0
-			lw $t1, -4($fp) # Load length into t1
+			lw $t0, -4($fp) # Load i into t0
+			lw $t1, -8($fp) # Load length into t1
 			slt $t2, $t0, $t1 # If i < length, then t2 = 1
 			beq $t2, $0, finish # If t2 = 0, then branch to finish
 		
 			# key = the_list[i]
-			lw $t0, +12($fp) # Load i into t0
+			lw $t0, -4($fp) # Load i into t0
 			lw $t1, +8($fp) # Load the_list
 			sll $t0, $t0, 2 # t0 = 4*t0
 			add $t0, $t0, $t1 # t0 = the_list[i] - 4
 			lw $t1, 4($t0) # a0 = the_list[i]
-			sw $t1, -8($fp) # Store a0 into key
+			sw $t1, -12($fp) # Store a0 into key
 
 			# j = i - 1
-			lw $t0, +12($fp) # Load i into t0
+			lw $t0, -4($fp) # Load i into t0
 			addi $t0, $0 -1 # Add -1 to i
-			sw $t0, -12($fp) # Store t0 into j
+			sw $t0, -16($fp) # Store t0 into j
 		
 			while:
 				# while j >= 0 and  key < the_list[j]
-				lw $t0, -12($fp) # Load j into t0
+				lw $t0, -16($fp) # Load j into t0
 				slt $t1, $t0, $0 # If t0 >= 0, then t1 = 1
 				beq $t1, $0, continue
 			
-				lw $t0, -8($fp) # t0 = key
-				lw $t1, +12($fp) # t0 = j
+				lw $t0, -12($fp) # t0 = key
+				lw $t1, -4($fp) # t0 = j
 				lw $t3, +8($fp)
 				sll $t1, $t1, 2 # t0 = 4*t0
 				add $t1, $t1, $t3
@@ -85,13 +85,13 @@ insertion_sort:
 				beq $t4, $0, continue
 			
 				# the_list[j+1] = the_list[j]
-				lw $t0, -12($fp) # t0 = j
+				lw $t0, -16($fp) # t0 = j
 				sll $t0, $t0, 2 # t0 = 4*t0
 				la $t1, +8($fp)
 				add $t0, $t0, $t1
 				lw $t0, 4($t0)
 			
-				lw $t1, -12($fp)
+				lw $t1, -16($fp)
 				addi $t1, $t1, 1
 				sll $t1, $t1, 2
 				la $t2, +8($fp)
@@ -100,16 +100,16 @@ insertion_sort:
 				sw $t1, 4($t0)
 			
 				# j -= 1
-				lw $t0, -12($fp)
+				lw $t0, -16($fp)
 				addi $t0, $t0, -1
-				sw $t0, -12($fp)
+				sw $t0, -16($fp)
 			
 				j while
 			
 			continue:
 				# the_list[j+1] = key
-				lw $t0, -8($fp)
-				lw $t1, -12($fp)
+				lw $t0, -12($fp)
+				lw $t1, -16($fp)
 				lw $t2, +8($fp)
 				sll $t1, $t1, 2
 				add $t1, $t1, $t2
@@ -117,9 +117,9 @@ insertion_sort:
 				sll $a0, $t0, 2
 			
 				# i += 1
-				lw $t0, +12($fp)
+				lw $t0, -4($fp)
 				addi $t0, $0, 1
-				sw $t0, +12($fp)
+				sw $t0, -4($fp)
 			
 				# jump back to whileloop
 				j gothroughthelist
@@ -161,7 +161,7 @@ main:
 	# Allocate local variables on stack
 	addi $sp, $sp, -8
 	
-	# Allocate space for array
+	# Allocate space for array 
 	addi $a0, $0, 24
 	addi $v0, $0, 9
 	syscall
