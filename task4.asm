@@ -2,13 +2,238 @@
 
     .data
 
-fill: .asciiz "You haven't started task 4 yet\n"
+space: .asciiz " "
+newline: .asciiz "\n"
 
     .text
+    
+    .globl insertion_sort
 
-la $a0, fill
-addi $v0, $0, 4
-syscall
+jal main    
 
-addi $v0, $0, 10
-syscall
+insertion_sort:	
+
+                   	# memory diagram
+            	##################################
+            	# j                  -  -16($fp) #
+            	# key                -  -12($fp) #
+            	# length    	     -   -8($fp) #
+            	# i                  -   -4($fp) #
+            	# fp                 -    0($fp) #
+            	# ra                 -   +4($fp) #
+            	# the_list           -   +8($fp) #
+            	##################################
+
+		# Save value of $ra on stack
+		addi $sp, $sp, -4
+		sw $ra, ($sp)
+		
+		# Save value of $fp on stack
+		addi $sp, $sp, -4
+		sw $fp, ($sp)
+		
+		# Copy $sp to $fp
+		addi $fp, $sp, 0
+		
+		# Allocate local variables on stack
+		addi $sp, $sp, -16
+		
+		# length = len(the_list)
+		lw $t0, +8($fp) 
+		lw $t1, ($t0) # len(this_list)
+		sw $t1, -8($fp)
+		
+		# Set i = 1
+		lw $t0, -4($fp)
+		addi $t0, $0, 1
+		sw $t0, -4($fp)
+		
+		gothroughthelist:	
+			# While i < length
+			lw $t0, -4($fp)
+			lw $t1, -8($fp)
+			slt $t2, $t0, $t1 # If i < length, then t2 = 1
+			beq $t2, $0, finish
+		
+			# key = the_list[i]
+			lw $t0, -4($fp) # t0 = i
+			lw $t1, +8($fp)
+			sll $t0, $t0, 2 # t0 = 4*t0
+			add $t0, $t0, $t1
+			lw $a0, 4($t0)
+			sw $a0, -12($fp)
+
+			# j = i - 1
+			lw $t0, -4($fp)
+			addi $t0, $0 -1
+			sw $t0, -16($fp)
+		
+			while:
+			# while j >= 0 and  key < the_list[j]
+			lw $t0, 0
+			lw $t1, -16($fp)
+			slt $t2, $t1, $t0
+			beq $t2, $0, continue
+			
+			lw $t0, -12($fp) # t0 = key
+			lw $t1, -4($fp) # t0 = j
+			lw $t3, +8($fp)
+			sll $t1, $t1, 2 # t0 = 4*t0
+			add $t1, $t1, $t3
+			lw $a0, 4($t0)
+			
+			slt $t4, $t0, $a0
+			beq $t4, $0, continue
+			
+			# the_list[j+1] = the_list[j]
+			lw $t0, -16($fp) # t0 = j
+			lw $t1, +8($fp)
+			sll $t0, $t0, 2 # t0 = 4*t0
+			add $t1, $t1, $t3
+			lw $a0, 4($t0)
+			
+			lw $t0, -16($fp)
+			addi $t0, $t0, 1
+			sll $t0, $t0, 2
+			la $t1, +8($fp)
+			add $t0, $t1, $t0
+			lw $t2, 4($t0)
+			
+			lw $t0, +8($fp)
+			lw $t1, 4($t0)
+			sw $t1, $a0
+			
+			# j -= 1
+			lw $t0, -16($fp)
+			addi $t0, $t0, -1
+			sw $t0, -15($fp)
+			
+			j while
+			
+			continue:
+			# the_list[j+1] = key
+			TODO
+			
+			# i += 1
+			lw $t0, -4($fp)
+			addi $t0, $0, 1
+			sw $t0, -4($fp)
+			
+			# jump back to whileloop
+			j gothroughthelist
+		
+		finish:
+			# Clear local variables off stack
+			addi $sp, $sp, 16
+		
+			# Restores saved $fp off stack
+			lw $fp, ($sp)
+			addi $sp, $sp, +4
+		
+			# Restores saved $ra off stack
+			lw $ra, ($sp)
+			addi $sp, $sp, +4
+
+			# Returns to caller
+			jr $ra
+
+main:	
+                 # memory diagram         
+        ##################################
+        # i            	     -   -8($fp) #
+        # arr                -   -4($fp) #
+        # fp                 -    0($fp) #
+        ##################################
+	
+	# Save value of $ra on stack
+	addi $sp, $sp, -4
+	sw $ra, ($sp)
+		
+	# Save value of $fp on stack
+	addi $sp, $sp, -4
+	sw $fp, ($sp)
+	
+	# Copy $sp to $fp
+	addi $fp, $sp, 0
+	
+	# Allocate local variables on stack
+	addi $sp, $sp, -8
+	
+	addi $a0, $0, 24
+	addi $v0, $0, 9
+	syscall
+	sw $v0, -4($fp)
+	
+	# Set arr = [6, -2, 7, 4, -10]
+	lw $t0, -4($fp)
+	
+	addi $t1, $0, 6
+	sw $t1, ($t0)
+	
+	addi $t1, $0, 6
+	sw $t1, 4($t0)
+	
+	addi $t1, $0, -2
+	sw $t1, 8($t0)
+	
+	addi $t1, $0, 7
+	sw $t1, 12($t0)
+	
+	addi $t1, $0, 4
+	sw $t1, 16($t0)
+	
+	addi $t1, $0, -10
+	sw $t1, 20($t0)
+	
+	# Store i = 0
+	lw $t0, -8($fp)
+	sw $0, -8($fp)
+	
+	# Pass arr into arg the_list
+	addi $sp $sp, -4
+	lw $t0, -4($fp)
+	sw $t0, ($sp)
+	
+	jal insertion_sort
+	
+	gothrougharr:		
+		# While i < len(arr)
+		lw $t0, -4($fp)
+		lw $t1, ($t0)
+		lw $t0, -8($fp)
+		slt $t2, $t0, $t1
+		beq $t2, $0, end
+
+		# arr[i]
+		lw $t0, -8($fp) # t0 = i
+		lw $t1, -4($fp)
+		sll $t0, $t0, 2 # t0 = 4*t0
+		add $t0, $t0, $t1
+		lw $a0, 4($t0)
+		
+		lw $a0, $a0, 0
+		addi $v0, $0, 1
+		syscall
+		add $v0, $0, 4
+		la $a0, space
+		syscall
+		
+		la $a0, newline
+		addi $v0, $0, 4
+		syscall
+		
+		# i += 1
+		lw $t0, -8($fp)
+		addi $t0, $t0, 1
+		sw $t0, -8($fp)
+		
+		j gothrougharr
+		
+	end:
+		lw $ra, ($sp)
+		addi $sp, $sp, +4
+		lw $fp, ($sp)
+		addi $sp, $sp, +4
+
+		addi $v0, $0, 10
+		syscall
