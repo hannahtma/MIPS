@@ -20,12 +20,12 @@ smash_or_sad:	# smash_or_sad function
 
                     # memory diagram
             ##################################
-            # smash_count	 -   -8($fp) #
+            # smash_count	     -   -8($fp) #
             # i                  -   -4($fp) #
             # fp                 -    0($fp) #
             # ra                 -   +4($fp) #
-            # hulk_power         -   +8($fp) #
-            # the_list           -  +12($fp) #
+            # the_list           -   +8($fp) #
+            # hulk_power         -  +12($fp) #
             ##################################
 
 		# Save value of $ra on stack
@@ -52,7 +52,7 @@ smash_or_sad:	# smash_or_sad function
 		
 		whileloop:		
 		# While i < len(the_list)
-		lw $t0, +12($fp)
+		lw $t0, +8($fp)
 		lw $t1, ($t0)
 		lw $t0, -4($fp)
 		slt $t2, $t0, $t1
@@ -60,12 +60,12 @@ smash_or_sad:	# smash_or_sad function
 
 		# the_list[i]
 		lw $t0, -4($fp) # t0 = i
-		lw $t1, +12($fp)
+		lw $t1, +8($fp)
 		sll $t0, $t0, 2 # t0 = 4*t0
 		add $t0, $t0, $t1
 		lw $a0, 4($t0)
 		
-		lw $t3, +8($fp) # t3 = hulk_power
+		lw $t3, +12($fp) # t3 = hulk_power
 		slt $t4, $t3, $a0 # If t2 < t3 (the_list[i] < hulk_power), then t4 = 1
 		bne $t4, $0, hulksad # Branch if t4 = 0
 
@@ -124,7 +124,7 @@ main:
 
                     # memory diagram
             ##################################
-            # hulk_power	 -   -8($fp) #
+            # hulk_power	     -   -8($fp) #
             # list_of_numbers    -   -4($fp) #
             # fp                 -    0($fp) #
             ##################################
