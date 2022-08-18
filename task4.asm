@@ -41,7 +41,7 @@ insertion_sort:
 		# length = len(the_list)
 		lw $t0, +8($fp) 
 		lw $t1, ($t0) # len(this_list)
-		sw $t1, -8($fp)
+		sw $t1, -4($fp)
 		
 		# Set i = 1
 		lw $t0, -8($fp) # Load i into t0
@@ -51,7 +51,7 @@ insertion_sort:
 		gothroughthelist:	
 			# While i < length
 			lw $t0, -8($fp) # Load i into t0
-			lw $t1, -8($fp) # Load length into t1
+			lw $t1, -4($fp) # Load length into t1
 			slt $t2, $t0, $t1 # If i < length, then t2 = 1
 			beq $t2, $0, finish # If t2 = 0, then branch to finish
 		
