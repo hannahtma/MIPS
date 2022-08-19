@@ -57,10 +57,10 @@ insertion_sort:
 		
 			# key = the_list[i]
 			lw $t0, -8($fp) # Load i into t0
-			lw $t1, +8($fp) # Load the_list
+			la $t1, +8($fp) # Load the_list
 			sll $t0, $t0, 2 # t0 = 4*t0
 			add $t0, $t0, $t1 # t0 = the_list[i] - 4
-			lw $t1, 4($t0) # a0 = the_list[i]
+			la $t1, 4($t0) # a0 = the_list[i]
 			sw $t1, -12($fp) # Store a0 into key
 
 			# j = i - 1
@@ -76,10 +76,10 @@ insertion_sort:
 			
 				lw $t0, -12($fp) # t0 = key
 				lw $t1, -8($fp) # t0 = j
-				lw $t3, +8($fp)
+				la $t3, +8($fp)
 				sll $t1, $t1, 2 # t0 = 4*t0
 				add $t1, $t1, $t3
-				la $a0, 4($t0)
+				la $t0, 4($t0)
 			
 				slt $t4, $t0, $a0
 				beq $t4, $0, continue
@@ -254,3 +254,4 @@ main:
 
 		addi $v0, $0, 10
 		syscall
+		
