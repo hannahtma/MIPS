@@ -17,7 +17,7 @@ insertion_sort:
             	##################################
             	# j                  -  -16($fp) #
             	# key                -  -12($fp) #
-            	# i	    	         -   -8($fp) #
+            	# i	    	     -   -8($fp) #
             	# length             -   -4($fp) #
             	# fp                 -    0($fp) #
             	# ra                 -   +4($fp) #
@@ -57,11 +57,11 @@ insertion_sort:
 		
 			# key = the_list[i]
 			lw $t0, -8($fp) # Load i into t0
-			la $t1, +8($fp) # Load the_list
+			lw $t1, +8($fp) # Load the_list
 			sll $t0, $t0, 2 # t0 = 4*t0
 			add $t0, $t0, $t1 # t0 = the_list[i] - 4
-			la $t1, 4($t0) # a0 = the_list[i]
-			sw $t1, -12($fp) # Store a0 into key
+			lw $a0, 4($t0) # a0 = the_list[i]
+			sw $a0, -12($fp) # Store a0 into key
 
 			# j = i - 1
 			lw $t0, -8($fp) # Load i into t0
@@ -76,10 +76,10 @@ insertion_sort:
 			
 				lw $t0, -12($fp) # t0 = key
 				lw $t1, -8($fp) # t0 = j
-				la $t3, +8($fp)
 				sll $t1, $t1, 2 # t0 = 4*t0
-				add $t1, $t1, $t3
-				la $t0, 4($t0)
+				lw $t2, +8($fp)
+				add $t1, $t2, $t1
+				lw $t3, 4($t1)
 			
 				slt $t4, $t0, $a0
 				beq $t4, $0, continue
@@ -87,16 +87,16 @@ insertion_sort:
 				# the_list[j+1] = the_list[j]
 				lw $t0, -16($fp) # t0 = j
 				sll $t0, $t0, 2 # t0 = 4*t0
-				la $t1, +8($fp)
+				lw $t1, +8($fp)
 				add $t0, $t0, $t1
-				la $t0, 4($t0)
+				#la $t0, 4($t0)
 			
 				lw $t1, -16($fp)
 				addi $t1, $t1, 1
 				sll $t1, $t1, 2
-				la $t2, +8($fp)
+				lw $t2, +8($fp)
 				add $t1, $t2, $t1
-				la $t1, 4($t1)
+				lw $t1, 4($t1)
 				sw $t1, 4($t0)
 			
 				# j -= 1
