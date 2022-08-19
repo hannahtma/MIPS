@@ -110,11 +110,11 @@ insertion_sort:
 				# the_list[j+1] = key
 				lw $t0, -12($fp)
 				lw $t1, -16($fp)
-				lw $t2, +8($fp)
+				la $t2, +8($fp)
 				sll $t1, $t1, 2
 				add $t1, $t1, $t2
-				lw $a0, 4($t0)
-				sll $a0, $t0, 2
+				la $t0, 4($t0)
+				sll $t0, $t0, 2
 			
 				# i += 1
 				lw $t0, -8($fp)
