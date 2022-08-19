@@ -89,7 +89,7 @@ insertion_sort:
 				sll $t0, $t0, 2 # t0 = 4*t0
 				la $t1, +8($fp)
 				add $t0, $t0, $t1
-				#lw $t0, 4($t0)
+				lw $t0, 4($t0)
 			
 				lw $t1, -16($fp)
 				addi $t1, $t1, 1
