@@ -87,16 +87,16 @@ insertion_sort:
 				# the_list[j+1] = the_list[j]
 				lw $t0, -16($fp) # t0 = j
 				sll $t0, $t0, 2 # t0 = 4*t0
-				lw $t1, +8($fp)
+				la $t1, +8($fp)
 				add $t0, $t0, $t1
-				lw $t0, 4($t0)
+				la $t0, 4($t0)
 			
 				lw $t1, -16($fp)
 				addi $t1, $t1, 1
 				sll $t1, $t1, 2
-				lw $t2, +8($fp)
+				la $t2, +8($fp)
 				add $t1, $t2, $t1
-				lw $t1, 4($t1)
+				la $t1, 4($t1)
 				sw $t1, 4($t0)
 			
 				# j -= 1
