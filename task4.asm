@@ -59,9 +59,9 @@ insertion_sort:
 			lw $t0, -8($fp) # Load i into t0
 			lw $t1, +8($fp) # Load the_list
 			sll $t0, $t0, 2 # t0 = 4*t0
-			add $t0, $t0, $t1 # t0 = the_list[i] - 4
-			lw $a0, 4($t0) # a0 = the_list[i]
-			sw $a0, -12($fp) # Store a0 into key
+			add $t0, $t0, $t1 # t0 = the_list[i]
+			lw $t1, 4($t0) # Load key value
+			sw $t1, -12($fp) # Store t0 into key
 
 			# j = i - 1
 			lw $t0, -8($fp) # Load i into t0
@@ -75,29 +75,30 @@ insertion_sort:
 				bne $t1, $0, continue
 			
 				lw $t0, -12($fp) # t0 = key
-				lw $t1, -8($fp) # t0 = j
-				sll $t1, $t1, 2 # t0 = 4*t0
-				lw $t2, +8($fp)
-				add $t1, $t2, $t1
-				lw $t3, 4($t1)
+				lw $t1, -16($fp) # t0 = j
+				sll $t1, $t1, 2 # t1 = 4*t1
+				lw $t2, +8($fp) # Load list address
+				add $t3, $t2, $t1
+				lw $t4, 4($t3)
 			
-				slt $t4, $t0, $a0
-				beq $t4, $0, continue
+				slt $t5, $t0, $t4
+				beq $t5, $0, continue
 			
 				# the_list[j+1] = the_list[j]
 				lw $t0, -16($fp) # t0 = j
 				sll $t0, $t0, 2 # t0 = 4*t0
 				lw $t1, +8($fp)
 				add $t0, $t0, $t1
-				#la $t0, 4($t0)
+				lw $t0, 4($t0)
 			
 				lw $t1, -16($fp)
 				addi $t1, $t1, 1
-				sll $t1, $t1, 2
+				sll $t1, $t1, 2 #(j+1)*4
 				lw $t2, +8($fp)
 				add $t1, $t2, $t1
-				lw $t1, 4($t1)
-				sw $t1, 4($t0)
+
+				
+				sw $t0, 4($t1)
 			
 				# j -= 1
 				lw $t0, -16($fp)
@@ -108,17 +109,17 @@ insertion_sort:
 			
 			continue:
 				# the_list[j+1] = key
-				lw $t0, -12($fp)
-				lw $t1, -16($fp)
-				la $t2, +8($fp)
-				sll $t1, $t1, 2
-				add $t1, $t1, $t2
-				la $t0, 4($t0)
-				sll $t0, $t0, 2
+				lw $t0, -12($fp) # t0 = key
+				lw $t1, -16($fp) # t1 = j
+				addi $t1, $t1, 1 # t1 = j + 1
+				sll $t1, $t1, 2  # t1 = 4 * t1
+				lw $t2, +8($fp) # t2 = address of the_list
+				add $t3, $t1, $t2
+				sw $t0, 4($t3)
 			
 				# i += 1
 				lw $t0, -8($fp)
-				addi $t0, $0, 1
+				addi $t0, $t0, 1
 				sw $t0, -8($fp)
 			
 				# jump back to whileloop
@@ -199,27 +200,13 @@ main:
 	
 	jal insertion_sort
 	
-	# Save value of $ra on stack
-	addi $sp, $sp, -4
-	sw $ra, ($sp)
-		
-	# Save value of $fp on stack
-	addi $sp, $sp, -4
-	sw $fp, ($sp)
-	
-	# Copy $sp to $fp
-	addi $fp, $sp, 0
-	
-	# Allocate local variables on stack
-	addi $sp, $sp, -8
-	
 	gothrougharr:		
 		# While i < len(arr)
-		lw $t0, -4($fp)
-		lw $t1, ($t0)
-		lw $t0, -8($fp)
-		slt $t2, $t0, $t1
-		beq $t2, $0, end
+		lw $t0, -8($fp) # t0 = i
+		lw $t1, -4($fp) # t1 = address of arr
+		lw $t2, ($t1) # t2 = len(arr)
+		slt $t3, $t0, $t2
+		beq $t3, $0, end
 
 		# arr[i]
 		lw $t0, -8($fp) # t0 = i
@@ -235,10 +222,6 @@ main:
 		la $a0, space
 		syscall
 		
-		la $a0, newline
-		addi $v0, $0, 4
-		syscall
-		
 		# i += 1
 		lw $t0, -8($fp)
 		addi $t0, $t0, 1
@@ -247,6 +230,10 @@ main:
 		j gothrougharr
 		
 	end:
+		la $a0, newline
+		addi $v0, $0, 4
+		syscall
+		
 		lw $ra, ($sp)
 		addi $sp, $sp, +4
 		lw $fp, ($sp)
