@@ -181,13 +181,13 @@ finish: # total_cost = total_cost + (consumption*tier_one_price)
         addi $v0, $0, 4
         syscall
         lw $a0, dollars
-        addi $v0, $0, 4
+        addi $v0, $0, 1
         syscall
         la $a0, fullstop
         addi $v0, $0, 4
         syscall
         lw $a0, cents
-        addi $v0, $0, 4
+        addi $v0, $0, 1
         syscall
         la $a0, newline
         addi $v0, $0, 4
