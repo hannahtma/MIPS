@@ -123,70 +123,72 @@ discounted: # Discounted more than 1000kWh
             sw $t0, consumption # consumption = 1000
 
 next:   # more than 600
-        lw $t0, consumption
-        addi $t1, $0, 600
-        sub $t2, $t0, $t1
-        sw $t2, consumption_difference
+        lw $t0, consumption # t0 = consumption
+        addi $t1, $0, 600 # t1 = 600
+        slt $t2, $t1, $t0 # if 600 < consumption, then t2 = 1
+        bne $t1, $0, finish # if t2 != 0, then branch to finish
 
-        lw $t0, consumption_difference
-        slt $t1, $t0, $0 # if consumption_difference < 0, t1 = 1
-        bne $t1, $0, finish
+        lw $t0, consumption # t0 = consumption
+        addi $t1, $0, 600 # t1 = 600
+        sub $t2, $t0, $t1 # t2 = consumption - 600
+        lw $t0, tier_two_price # t0 = tier_two_price
+        mult $t0, $t2 # tier_two_price * (consumption - 600)
+        mflo $t3 # t3 = tier_two_price * (consumption - 600)
+        lw $t0, total_cost # t0 = total_cost
+        add $t4, $t0, $t3 # t4 = total_cost + tier_two_price * (consumption - 600)
+        sw $t4, total_cost # total_cost = t4
 
-        lw $t0, consumption
-        addi $t1, $0, 600
-        sub $t2, $t0, $t1
-        lw $t0, tier_two_price
-        mult $t0, $t2
-        mflo $t3
-        lw $t0, total_cost
-        add $t4, $t0, $t3
-        sw $t4, total_cost
+        addi $t0, $0, 600 # t0 = 600
+        sw $t0, consumption # consumption = 600
 
-        addi $t0, $0, 600
-        sw $t1, consumption
+finish: # total_cost = total_cost + (consumption*tier_one_price)
+        lw $t0, consumption # t0 = consumption
+        lw $t1, tier_one_price # t1 = tier_one_price
+        mult $t0, $t1 # consumption * tier_one_price
+        mflo $t2 # t2 = consumption * tier_one_price
+        lw $t0, total_cost # t0 = total_cost
+        add $t1, $t0, $t2 # t1 = total_cost + consumption * tier_one_price
+        sw $t1, total_cost # total_cost = t1
 
-finish: lw $t0, consumption
-        lw $t1, tier_one_price
-        mult $t0, $t1
-        mflo $t2
-        lw $t0, total_cost
-        add $t1, $t0, $t2
-        sw $t1, total_cost
+        # gst = total_cost // 10
+        lw $t0, total_cost # t0 = total_cost
+        addi $t1, $0, 10 # t1 = 10
+        div $t0, $t1 # total_cost / 10
+        mflo $t0 # t0 = total_cost // 10
+        sw $t0, gst # gst = total_cost // 10
 
-        lw $t0, total_cost
-        addi $t1, $0, 10
-        div $t0, $t1
-        mflo $t0
-        sw $t0, gst
+        # total_bill = total_cost + gst
+        lw $t0, total_cost # t0 = total_cost
+        lw $t1, gst # t1 = gst
+        add $t2, $t0, $t1 # t2 = total_cost + gst
+        sw $t2, total_bill # total_bill = total_cost + gst
 
-        lw $t0, total_cost
-        lw $t1, gst
-        add $t2, $t1, $t0
-        sw $t2, total_bill
+        # print(f"Mr Loki Laufeyson, your electricity bill is ${total_bill // 100}.{total_bill % 100}"))
+        lw $t0, total_bill # t0 = total_bill
+        addi $t1, $0, 100 # t1 = 100
+        div $t0, $t1 # t0 / t1
+        mflo $t0 # t0 = t0 // t1
+        #sw $t0, dollars # dollars = 
 
-        lw $t0, total_bill
-        addi $t1, $0, 100
-        div $t0, $t1
-        mflo $t0
-        sw $t0, dollars
-
-        lw $t0, total_bill
-        addi $t1, $0, 100
-        div $t0, $t1
-        mfhi $t0
-        sw $t0, cents
+        #lw $t0, total_bill
+        #addi $t1, $0, 100
+        #div $t0, $t1
+        mfhi $t1
+        #sw $t0, cents
 
         # Print final amount
         la $a0, end
         addi $v0, $0, 4
         syscall
-        lw $a0, dollars
+        #lw $a0, dollars
+        addi $v0, $t0, $0
         addi $v0, $0, 1
         syscall
         la $a0, fullstop
         addi $v0, $0, 4
         syscall
-        lw $a0, cents
+        #lw $a0, cents
+        addi $v0, $t1, $0
         addi $v0, $0, 1
         syscall
         la $a0, newline
