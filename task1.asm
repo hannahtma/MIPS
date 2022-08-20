@@ -18,7 +18,6 @@ consumption_prompt: .asciiz "Enter your total consumption in kWh: "
 consumption: .word 0
 total_cost: .word 0
 
-thousand: .word 1000
 six_hundred: .word 600
 consumption_difference: .word 0
 
@@ -101,7 +100,7 @@ continue:   # Print "Enter your total consumption in kWh: "
 
             normal:
             # Normal more than 1000kWh
-            lw $t0, thousand
+            lw $t0, $0, 1000
             lw $t1, consumption
             sub $t2, $t1, $t0
             sw $t2, consumption_difference
@@ -111,7 +110,7 @@ continue:   # Print "Enter your total consumption in kWh: "
             bne $t1, $0, next
 
             lw $t0, consumption
-            lw $t1, thousand
+            lw $t1, $0, 1000
             sub $t2, $t0, $t1
             lw $t0, tier_three_price
             mult $t0, $t2
@@ -120,13 +119,13 @@ continue:   # Print "Enter your total consumption in kWh: "
             add $t4, $t0, $t3
             sw $t4, total_cost
 
-            lw $t0, thousand
+            lw $t0, $0, 1000
             sw $t1, consumption
 
             j next
 
 discounted: # Discounted more than 1000kWh
-            lw $t0, thousand
+            lw $t0, $0, 1000
             lw $t1, consumption
             sub $t2, $t1, $t0
             sw $t2, consumption_difference
@@ -136,7 +135,7 @@ discounted: # Discounted more than 1000kWh
             bne $t1, $0, next
 
             lw $t0, consumption
-            lw $t1, thousand
+            lw $t1, $0, 1000
             sub $t2, $t0, $t1
             lw $t0, tier_three_price
             subi $t1, $t0, 2
@@ -146,7 +145,7 @@ discounted: # Discounted more than 1000kWh
             add $t4, $t0, $t3
             sw $t4, total_cost
 
-            lw $t0, thousand
+            lw $t0, $0, 1000
             sw $t0, consumption
 
 next:   # more than 600
