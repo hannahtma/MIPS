@@ -10,10 +10,6 @@ start: .asciiz "Welcome to the Thor Electrical Company!"
 age_prompt: .asciiz "Enter your age: "
 age: .word 0
 
-low_age: .word 18
-high_age: .word 65
-age_difference: .word 0
-
 consumption_prompt: .asciiz "Enter your total consumption in kWh: "
 consumption: .word 0
 total_cost: .word 0
@@ -30,7 +26,7 @@ fullstop: .asciiz "."
 newline: .asciiz "\n"
 
     .text
-            # Print "Welcome to the Thor Electrical Company"
+            # Print "Welcome to the Thor Electrical Company!"
             la $a0, start
             addi $v0, $0, 4
             syscall
@@ -48,40 +44,29 @@ newline: .asciiz "\n"
             syscall
             sw $v0, age
 
-            # Check for less than 18
-            lw $t0, age
-            lw $t1, low_age
-            sub $t2, $t1, $t0
-            sw $t2, age_difference
+            # if age <= 18 (age > 18)
+            lw $t0, age # t0 = age
+            add $t1, $0, 18 # t1 = 18 
+            slt $t2, $t1, $t0 # if 18 < age, then t2 = 1
+            bne $t2, $0, checkhigh # if t2 != 0, branch to checkhigh
 
-            lw $t0, age_difference
-            slt $t1, $t0, $0 # if t0 < 0, then t1 = 1. if not, t1 = 0
-            beq $t0, $0, iszero # if t0 = 0, branch to iszero
-            bne $t0, $0, checkhigh # if t0 != 0, branch to isnotzero
+checkhigh:      # if age >= 65 (age < 65)
+                lw $t0, high_age
+                addi $t1, $0, 65
+                slt $t2, $t0, $t1 # if age < 65, then t2 = 1
+                bne $t2, $0, nodiscount # if t2 != 0, then branch to nodiscount
 
-            addi $t0, $0, 1
-            sw $t0, discount_flag
+                # discount_flag = 1
+                lw $t0, discount_flag
+                addi $t0, $t0, 1
+                sw $t0, discount_flag
+        
+                j continue
 
-            j continue
+nodiscount:     # discount_flag = 0
+                sw $0, discount_flag
 
-iszero:     # If zero, set discount_flag = 1
-            addi $t0, $0, 1
-            sw $t0, discount_flag
-
-            j continue
-
-checkhigh:  # Check for more than 65
-            lw $t0, high_age
-            lw $t1, age
-            sub $t2, $t1, $t0
-            sw $t2, age_difference
-
-            lw $t0, age_difference
-            slt $t1, $t0, $0 # if t0 < 0, then t1 = 1. if not, t1 = 0
-            beq $t1, $0, iszero # check if t1 is zero
-
-            addi $t0, $0, 0
-            sw $t0, discount_flag
+                j continue
 
 continue:   # Print "Enter your total consumption in kWh: "
             la $a0, consumption_prompt
