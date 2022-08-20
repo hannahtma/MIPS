@@ -84,27 +84,23 @@ continue:   # Print "Enter your total consumption in kWh: "
 
             normal:
             # Normal more than 1000kWh
-            addi $t0, $0, 1000
-            lw $t1, consumption
-            sub $t2, $t1, $t0
-            sw $t2, consumption_difference
+            addi $t0, $0, 1000 # t0 = 1000
+            lw $t1, consumption # t1 = consumption
+            slt $t2, $t0, $t1 # if 1000 < consumption, then t2 = 1
+            beq $t2, $0, next # if t2 == 0, then branch to next
 
-            lw $t0, consumption_difference
-            slt $t1, $t0, $0 # if consumption_difference < 0, t1 = 1
-            bne $t1, $0, next
+            lw $t0, consumption # t0 = consumption 
+            addi $t1, $0, 1000 # t1 = 1000
+            sub $t2, $t0, $t1 # t2 = consumption - 1000
+            lw $t0, tier_three_price # t0 = tier_three_price
+            mult $t0, $t2 # tier_three_price * t2
+            mflo $t3 # t3 = tier_three_price * t2
+            lw $t0, total_cost # t0 = total_cost
+            add $t4, $t0, $t3 # t4 = total_cost + tier_three_price * (consumption-1000)
+            sw $t4, total_cost # total_cost = t4
 
-            lw $t0, consumption
-            addi $t1, $0, 1000
-            sub $t2, $t0, $t1
-            lw $t0, tier_three_price
-            mult $t0, $t2
-            mflo $t3
-            lw $t0, total_cost
-            add $t4, $t0, $t3
-            sw $t4, total_cost
-
-            addi $t0, $0, 1000
-            sw $t1, consumption
+            addi $t0, $0, 1000 # t0 = 1000
+            sw $t0, consumption # consumption = 1000
 
             j next
 
