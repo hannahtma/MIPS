@@ -49,7 +49,7 @@ newline: .asciiz "\n"
                 bne $t2, $0, nodiscount # if t2 != 0, branch to checkhigh
 
                 # if age >= 65 (age < 65)
-                lw $t0, high_age
+                lw $t0, age
                 addi $t1, $0, 65
                 slt $t2, $t0, $t1 # if age < 65, then t2 = 1
                 bne $t2, $0, nodiscount # if t2 != 0, then branch to nodiscount
