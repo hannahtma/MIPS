@@ -26,31 +26,31 @@ fullstop: .asciiz "."
 newline: .asciiz "\n"
 
     .text
-            # Print "Welcome to the Thor Electrical Company!"
-            la $a0, start
-            addi $v0, $0, 4
-            syscall
-            la $a0, newline
-            addi $v0, $0, 4
-            syscall
+                # Print "Welcome to the Thor Electrical Company!"
+                la $a0, start
+                addi $v0, $0, 4
+                syscall
+                la $a0, newline
+                addi $v0, $0, 4
+                syscall
 
-            # Print "Enter your age: "
-            la $a0, age_prompt
-            addi $v0, $0, 4
-            syscall
+                # Print "Enter your age: "
+                la $a0, age_prompt
+                addi $v0, $0, 4
+                syscall
 
-            # Take input for age
-            addi $v0, $0, 5
-            syscall
-            sw $v0, age
+                # Take input for age
+                addi $v0, $0, 5
+                syscall
+                sw $v0, age
 
-            # if age <= 18 (age > 18)
-            lw $t0, age # t0 = age
-            add $t1, $0, 18 # t1 = 18 
-            slt $t2, $t1, $t0 # if 18 < age, then t2 = 1
-            bne $t2, $0, checkhigh # if t2 != 0, branch to checkhigh
+                # if age <= 18 (age > 18)
+                lw $t0, age # t0 = age
+                add $t1, $0, 18 # t1 = 18 
+                slt $t2, $t1, $t0 # if 18 < age, then t2 = 1
+                bne $t2, $0, nodiscount # if t2 != 0, branch to checkhigh
 
-checkhigh:      # if age >= 65 (age < 65)
+                # if age >= 65 (age < 65)
                 lw $t0, high_age
                 addi $t1, $0, 65
                 slt $t2, $t0, $t1 # if age < 65, then t2 = 1
