@@ -173,8 +173,8 @@ finish: # total_cost = total_cost + (consumption*tier_one_price)
         lw $t0, total_bill
         addi $t1, $0, 100
         div $t0, $t1
-        mfhi $t1
-        sw $t1, cents
+        mfhi $t0
+        sw $t0, cents
 
         # Print final amount
         la $a0, end
