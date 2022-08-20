@@ -42,28 +42,15 @@ print_combination: 	# print_combination function
 			lw $t0, +16($fp) # t0 = r
 			addi $t0, $t0, 1 # t0 = r + 1
 			sll $a0, $t0, 2 # t0 = 4 * (r + 1)
-			addi $v0, $0, 9 
+			
+			# Allocate space for data
+			addi $v0, $0, 9
 			syscall
 			sw $v0, -4($fp)
 			
 			lw $t0, +16($fp) 
 			lw $t1, -4($fp)
 			sw $t0, ($t1)
-			
-			# Pass arr as argument
-			addi $sp, $sp, -4
-			lw $t0, +8($fp)
-			sw $t0, ($sp)
-			
-			# Pass n as argument
-			addi $sp $sp, -4
-			lw $t0, +12($fp)
-			sw $t0, ($sp)
-	
-			# Pass r as argument
-			addi $sp, $sp, -4
-			lw $t0, +16($fp)
-			sw $t0, ($sp)
 			
 			# Pass 0 as argument
 			addi $sp $sp, -4
@@ -74,10 +61,25 @@ print_combination: 	# print_combination function
 			addi $sp $sp, -4
 			lw $t0, -4($fp)
 			sw $t0, ($sp)
-	
+			
 			# Pass 0 as argument
 			addi $sp $sp, -4
 			addi $t0, $0, 0
+			sw $t0, ($sp)
+			
+			# Pass r as argument
+			addi $sp, $sp, -4
+			lw $t0, +16($fp)
+			sw $t0, ($sp)
+			
+			# Pass n as argument
+			addi $sp $sp, -4
+			lw $t0, +12($fp)
+			sw $t0, ($sp)
+			
+			# Pass arr as argument
+			addi $sp, $sp, -4
+			lw $t0, +8($fp)
 			sw $t0, ($sp)
 			
 			# Call combination_aux
@@ -199,37 +201,37 @@ combination_aux:	# combination_aux funtion
 					lw $t0, 4($t2)
 					sw $t0, 4($t3)
 					
-					# Pass arr as argument
-					addi $sp, $sp, -4
-					lw $t0, +8($fp)
-					sw $t0, ($sp)
-			
-					# Pass n as argument
-					addi $sp $sp, -4
-					lw $t0, +12($fp)
-					sw $t0, 4($sp)
-	
-					# Pass r as argument
-					addi $sp, $sp, -4
-					lw $t0, +16($fp)
-					sw $t0, 8($sp)
-			
-					# Pass index+1 as argument
-					addi $sp, $sp, -4
-					lw $t0, +20($fp)
-					addi $t0, $t0, 1
-					sw $t0, 12($sp)
-			
-					# Pass data as argument
-					addi $sp $sp, -4
-					lw $t0, +24($fp)
-					sw $t0, 16($sp)
-	
 					# Pass i+1 as argument
 					addi $sp, $sp, -4
 					lw $t0, +28($fp)
 					addi $t0, $t0, 1
 					sw $t0, 20($sp)
+					
+					# Pass data as argument
+					addi $sp $sp, -4
+					lw $t0, +24($fp)
+					sw $t0, 16($sp)
+					
+					# Pass index+1 as argument
+					addi $sp, $sp, -4
+					lw $t0, +20($fp)
+					addi $t0, $t0, 1
+					sw $t0, 12($sp)
+					
+					# Pass r as argument
+					addi $sp, $sp, -4
+					lw $t0, +16($fp)
+					sw $t0, 8($sp)
+					
+					# Pass n as argument
+					addi $sp $sp, -4
+					lw $t0, +12($fp)
+					sw $t0, 4($sp)
+					
+					# Pass arr as argument
+					addi $sp, $sp, -4
+					lw $t0, +8($fp)
+					sw $t0, ($sp)
 					
 					# call combination_aux
 					jal combination_aux
@@ -237,36 +239,36 @@ combination_aux:	# combination_aux funtion
 					# Clear arguments off stack
 					addi $sp, $sp, 24					
 					
-					# Pass arr as argument
-					addi $sp, $sp, -4
-					lw $t0, +8($fp)
-					sw $t0, ($sp)
-			
-					# Pass n as argument
-					addi $sp $sp, -4
-					lw $t0, +12($fp)
-					sw $t0, 4($sp)
-	
-					# Pass r as argument
-					addi $sp, $sp, -4
-					lw $t0, +16($fp)
-					sw $t0, 8($sp)
-			
-					# Pass index as argument
-					addi $sp, $sp, -4
-					lw $t0, +20($fp)
-					sw $t0, 12($sp)
-			
-					# Pass data as argument
-					addi $sp $sp, -4
-					lw $t0, +24($fp)
-					sw $t0, 16($sp)
-	
 					# Pass i+1 as argument
 					addi $sp, $sp, -4
 					lw $t0, +28($fp)
 					addi $t0, $t0, 1
 					sw $t0, 20($sp)
+					
+					# Pass data as argument
+					addi $sp $sp, -4
+					lw $t0, +24($fp)
+					sw $t0, 16($sp)
+					
+					# Pass index as argument
+					addi $sp, $sp, -4
+					lw $t0, +20($fp)
+					sw $t0, 12($sp)
+					
+					# Pass r as argument
+					addi $sp, $sp, -4
+					lw $t0, +16($fp)
+					sw $t0, 8($sp)
+					
+					# Pass n as argument
+					addi $sp $sp, -4
+					lw $t0, +12($fp)
+					sw $t0, 4($sp)
+					
+					# Pass arr as argument
+					addi $sp, $sp, -4
+					lw $t0, +8($fp)
+					sw $t0, ($sp)
 					
 					# call combination_aux
 					jal combination_aux
@@ -349,9 +351,9 @@ main:	# Main program
 	lw $t1, ($t0)
 	sw $t1, -8($fp)
 	
-	# Pass arr as argument
+	# Pass r as argument
 	addi $sp, $sp, -4
-	lw $t0, -4($fp)
+	lw $t0, -12($fp)
 	sw $t0, ($sp)
 	
 	# Pass n as argument
@@ -359,9 +361,9 @@ main:	# Main program
 	lw $t0, -8($fp)
 	sw $t0, ($sp)
 	
-	# Pass r as argument
+	# Pass arr as argument
 	addi $sp, $sp, -4
-	lw $t0, -12($fp)
+	lw $t0, -4($fp)
 	sw $t0, ($sp)
 	
 	# Call print_combination
