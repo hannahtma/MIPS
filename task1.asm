@@ -18,7 +18,6 @@ consumption_prompt: .asciiz "Enter your total consumption in kWh: "
 consumption: .word 0
 total_cost: .word 0
 
-six_hundred: .word 600
 consumption_difference: .word 0
 
 gst: .word 0
@@ -150,7 +149,7 @@ discounted: # Discounted more than 1000kWh
 
 next:   # more than 600
         lw $t0, consumption
-        lw $t1, six_hundred
+        addi $t1, $0, 600
         sub $t2, $t0, $t1
         sw $t2, consumption_difference
 
@@ -159,7 +158,7 @@ next:   # more than 600
         bne $t1, $0, finish
 
         lw $t0, consumption
-        lw $t1, six_hundred
+        addi $t1, $0, 600
         sub $t2, $t0, $t1
         lw $t0, tier_two_price
         mult $t0, $t2
@@ -168,7 +167,7 @@ next:   # more than 600
         add $t4, $t0, $t3
         sw $t4, total_cost
 
-        lw $t0, six_hundred
+        addi $t0, $0, 600
         sw $t1, consumption
 
 finish: lw $t0, consumption
