@@ -105,7 +105,7 @@ continue:   # Print "Enter your total consumption in kWh: "
 discounted: # Discounted more than 1000kWh
             addi $t0, $0, 1000 # t0 = 1000
             lw $t1, consumption # t1 = consumption
-            slt $t2, $t0, $t0 # if 1000 < consumption, then t2 = 1
+            slt $t2, $t0, $t1 # if 1000 < consumption, then t2 = 1
             beq $t2, $0, next # if t2 == 0, then branch to next
 
             lw $t0, consumption # t0 = consumption
