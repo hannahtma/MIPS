@@ -25,11 +25,11 @@ print_combination: 	# print_combination function
             		##################################
 
 			# Save value of $ra on stack
-			addi $sp, $sp, -4
-			sw $ra, ($sp)
+			addi $sp, $sp, -8
+			sw $ra, 4($sp)
 		
 			# Save value of $fp on stack
-			addi $sp, $sp, -4
+			#addi $sp, $sp, -4
 			sw $fp, ($sp)
 		
 			# Copy $sp to $fp
@@ -182,16 +182,11 @@ combination_aux:	# combination_aux funtion
 					addi $v0, $0, 4
 					syscall # print newline
 					
-					# jump to return
-					#j return
 					# Remove local variables
 					addi $sp, $sp, 4
 					
-					# Restores saved $fp off stack
+					# Restores saved $fp and $ra off stack
 					lw $fp, ($sp)
-					#addi $sp, $sp, +4
-		
-					# Restores saved $ra off stack
 					lw $ra, 4($sp)
 					addi $sp, $sp, +8
 					
@@ -204,13 +199,8 @@ combination_aux:	# combination_aux funtion
 					slt $t2, $t0, $t1 # if i < n, then t2 = 1
 					bne $t2, $0, lastpart # if t2 != 0 (i >= n), then branch to lastpart
 					
-					# jump to return
-					#j return
-					# Restores saved $fp off stack
+					# Restores saved $fp and $ra off stack
 					lw $fp, ($sp)
-					#addi $sp, $sp, +4
-		
-					# Restores saved $ra off stack
 					lw $ra, 4($sp)
 					addi $sp, $sp, +8
 					
@@ -232,17 +222,11 @@ combination_aux:	# combination_aux funtion
 					# data[index] = arr[i]
 					lw $t0, 4($t2)
 					sw $t0, 4($t3)
-					
-					# Allocate arguments on stack
-					#add $sp, $sp, -24
 			
 					# Pass i+1 as argument
 					addi $sp, $sp, -4
 					lw $t0, +28($fp)
 					addi $t0, $t0, 1
-					#sw $t0, +28($fp)
-					
-					#lw $t0, +28($fp)
 					sw $t0, ($sp)
 					
 					# Pass data as argument
@@ -254,9 +238,6 @@ combination_aux:	# combination_aux funtion
 					addi $sp, $sp, -4
 					lw $t0, +20($fp)
 					addi $t0, $t0, 1
-					#sw $t0, +20($fp)
-					
-					#lw $t0, +20($fp)
 					sw $t0, ($sp)
 					
 					# Pass r as argument
@@ -280,30 +261,10 @@ combination_aux:	# combination_aux funtion
 					# Remove arguments
 					addi $sp, $sp, 24
 					
-					# Remove local variables
-					#addi $sp, $sp, 4
-					
-					# Restores saved $fp off stack
-					#lw $fp, ($sp)
-					#addi $sp, $sp, +4
-		
-					# Restores saved $ra off stack
-					#lw $ra, ($sp)
-					#addi $sp, $sp, +4
-					
-					# Allocate arguments on stack
-					#add $sp, $sp, -24
-					
-					# Remove local variables
-					#addi $sp, $sp, -4
-					
 					# Pass i+1 as argument
 					addi $sp, $sp, -4
 					lw $t0, +28($fp)
 					addi $t0, $t0, 1
-					#sw $t0, +28($fp)
-					
-					#lw $t0, +28($fp)
 					sw $t0, ($sp)
 					
 					# Pass data as argument
@@ -337,33 +298,14 @@ combination_aux:	# combination_aux funtion
 					# Remove arguments
 					addi $sp, $sp, 24
 					
-					# Remove local variables
-					#addi $sp, $sp, 4
-					
-					# Restores saved $fp off stack
+					# Restores saved $fp and $ra off stack
 					lw $fp, ($sp)
-					#addi $sp, $sp, +4
-		
-					# Restores saved $ra off stack
 					lw $ra, 4($sp)
 					addi $sp, $sp, +8
 					
+					# Leave function
 					jr $ra
 				
-			return:		# Remove local variables
-					#addi $sp, $sp, 4
-					
-					# Restores saved $fp off stack
-					#lw $fp, ($sp)
-					#addi $sp, $sp, +4
-		
-					# Restores saved $ra off stack
-					#lw $ra, 4($sp)
-					#addi $sp, $sp, +8
-					
-					# Leave function
-					#jr $ra		
-			
 main:	# Main program
 	
 		# memory diagram
@@ -375,11 +317,11 @@ main:	# Main program
 	##################################
 
 	# Save value of $ra on stack
-	addi $sp, $sp, -4
-	sw $ra, ($sp)
+	addi $sp, $sp, -8
+	sw $ra, 4($sp)
 		
 	# Save value of $fp on stack
-	addi $sp, $sp, -4
+	#addi $sp, $sp, -4
 	sw $fp, ($sp)
 	
 	# Copy $sp to $fp
@@ -451,11 +393,11 @@ main:	# Main program
 		
 	# Restores saved $fp off stack
 	lw $fp, ($sp)
-	addi $sp, $sp, +4
+	#addi $sp, $sp, +4
 		
 	# Restores saved $ra off stack
-	lw $ra, ($sp)
-	addi $sp, $sp, +4
+	lw $ra, 4($sp)
+	addi $sp, $sp, +8
 
 	# End program
 	addi $v0, $0, 10
