@@ -38,6 +38,9 @@ print_combination: 	# print_combination function
 			# Allocate local variables on stack
 			addi $sp, $sp, -4
 			
+			# Allocate arguments on stack
+			add $sp, $sp, -12
+			
 			# data = [0] * r
 			lw $t0, +16($fp) # t0 = r
 			addi $t0, $t0, 1 # t0 = r + 1
@@ -86,7 +89,7 @@ print_combination: 	# print_combination function
 			jal combination_aux
 			
 			# Remove arguments
-			addi $sp, $sp, 24
+			addi $sp, $sp, 12
 			
 			# Deallocate local variables off stack
 			addi $sp, $sp, 4
@@ -131,6 +134,9 @@ combination_aux:	# combination_aux funtion
 			# Allocate local variables on stack
 			addi $sp, $sp, -4
 			
+			# Allocate arguments on stack
+			addi $sp, $sp, -24
+			
 			# if (index == r)
 			lw $t0, +20($fp) # t0 = index
 			lw $t1, +16($fp) # t1 = r
@@ -169,7 +175,7 @@ combination_aux:	# combination_aux funtion
 					j forjinranger
 			
 			leaveforloop: 	# print()
-					lw $a0, newline
+					la $a0, newline
 					addi $v0, $0, 4
 					syscall # print newline
 					
@@ -205,65 +211,34 @@ combination_aux:	# combination_aux funtion
 					addi $sp, $sp, -4
 					lw $t0, +28($fp)
 					addi $t0, $t0, 1
-					sw $t0, 20($sp)
+					sw $t0, +28($fp)
+					
+					lw $t0, +28($fp)
+					sw $t0, ($sp)
 					
 					# Pass data as argument
 					addi $sp $sp, -4
 					lw $t0, +24($fp)
-					sw $t0, 16($sp)
+					sw $t0, ($sp)
 					
 					# Pass index+1 as argument
 					addi $sp, $sp, -4
 					lw $t0, +20($fp)
 					addi $t0, $t0, 1
-					sw $t0, 12($sp)
+					sw $t0, +20($fp)
 					
-					# Pass r as argument
-					addi $sp, $sp, -4
-					lw $t0, +16($fp)
-					sw $t0, 8($sp)
-					
-					# Pass n as argument
-					addi $sp $sp, -4
-					lw $t0, +12($fp)
-					sw $t0, 4($sp)
-					
-					# Pass arr as argument
-					addi $sp, $sp, -4
-					lw $t0, +8($fp)
-					sw $t0, ($sp)
-					
-					# call combination_aux
-					jal combination_aux
-					
-					# Clear arguments off stack
-					addi $sp, $sp, 24					
-					
-					# Pass i+1 as argument
-					addi $sp, $sp, -4
-					lw $t0, +28($fp)
-					addi $t0, $t0, 1
-					sw $t0, 20($sp)
-					
-					# Pass data as argument
-					addi $sp $sp, -4
-					lw $t0, +24($fp)
-					sw $t0, 16($sp)
-					
-					# Pass index as argument
-					addi $sp, $sp, -4
 					lw $t0, +20($fp)
-					sw $t0, 12($sp)
+					sw $t0, ($sp)
 					
 					# Pass r as argument
 					addi $sp, $sp, -4
 					lw $t0, +16($fp)
-					sw $t0, 8($sp)
+					sw $t0, ($sp)
 					
 					# Pass n as argument
 					addi $sp $sp, -4
 					lw $t0, +12($fp)
-					sw $t0, 4($sp)
+					sw $t0, ($sp)
 					
 					# Pass arr as argument
 					addi $sp, $sp, -4
@@ -272,13 +247,13 @@ combination_aux:	# combination_aux funtion
 					
 					# call combination_aux
 					jal combination_aux
-				
-			return:		# Remove arguments
+					
+					# Remove arguments
 					addi $sp, $sp, 24
-			
-					# Clear local variables off stack
-					addi $sp, $sp, 12
-			
+					
+					# Remove local variables
+					addi $sp, $sp, 4
+					
 					# Restores saved $fp off stack
 					lw $fp, ($sp)
 					addi $sp, $sp, +4
@@ -286,8 +261,59 @@ combination_aux:	# combination_aux funtion
 					# Restores saved $ra off stack
 					lw $ra, ($sp)
 					addi $sp, $sp, +4
-			
-					# Leave function
+					
+					# Pass i+1 as argument
+					addi $sp, $sp, -4
+					lw $t0, +28($fp)
+					addi $t0, $t0, 1
+					sw $t0, +28($fp)
+					
+					lw $t0, +28($fp)
+					sw $t0, ($sp)
+					
+					# Pass data as argument
+					addi $sp $sp, -4
+					lw $t0, +24($fp)
+					sw $t0, ($sp)
+					
+					# Pass index as argument
+					addi $sp, $sp, -4
+					lw $t0, +20($fp)
+					sw $t0, ($sp)
+					
+					# Pass r as argument
+					addi $sp, $sp, -4
+					lw $t0, +16($fp)
+					sw $t0, ($sp)
+					
+					# Pass n as argument
+					addi $sp $sp, -4
+					lw $t0, +12($fp)
+					sw $t0, ($sp)
+					
+					# Pass arr as argument
+					addi $sp, $sp, -4
+					lw $t0, +8($fp)
+					sw $t0, ($sp)
+					
+					# call combination_aux
+					jal combination_aux
+					
+					# Remove arguments
+					addi $sp, $sp, 24
+					
+					# Remove local variables
+					addi $sp, $sp, 4
+					
+					# Restores saved $fp off stack
+					lw $fp, ($sp)
+					addi $sp, $sp, +4
+		
+					# Restores saved $ra off stack
+					lw $ra, ($sp)
+					addi $sp, $sp, +4	
+				
+			return:		# Leave function
 					jr $ra		
 			
 main:	# Main program
@@ -369,7 +395,10 @@ main:	# Main program
 	# Call print_combination
 	jal print_combination
 	
-	# Remove arguments/local variables off stack
+	# Remove local variables off stack
+	addi $sp, $sp, 12
+	
+	# Remove arguments off stack
 	addi $sp, $sp, 12
 		
 	# Restores saved $fp off stack
