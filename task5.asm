@@ -38,9 +38,6 @@ print_combination: 	# print_combination function
 			# Allocate local variables on stack
 			addi $sp, $sp, -4
 			
-			# Allocate arguments on stack
-			#add $sp, $sp, -12
-			
 			# data = [0] * r
 			lw $t0, +16($fp) # t0 = r
 			addi $t0, $t0, 1 # t0 = r + 1
@@ -53,7 +50,7 @@ print_combination: 	# print_combination function
 			# Store the space to data
 			sw $v0, -4($fp)
 			
-			lw $t0, +16($fp) 
+			lw $t0, +12($fp) 
 			lw $t1, -4($fp)
 			sw $t0, ($t1)
 			
@@ -143,6 +140,7 @@ combination_aux:	# combination_aux funtion
 			
 			# Allocate local variables on stack
 			addi $sp, $sp, -4
+			sw $0, -4($fp)
 			
 			# Initialise j = 0
 			lw $t0, -4($fp) # t0 = j
