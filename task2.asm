@@ -19,11 +19,6 @@ final_r: .word 0
 a: .asciiz "A "
 star: .asciiz "* "
 
-zero: .word 0
-five: .word 5
-negativeone: .word -1
-one: .word 1
-
 emptystring: .asciiz ""
 newline: .asciiz "\n"
 
