@@ -173,6 +173,7 @@ combination_aux:	# combination_aux funtion
 					
 					# jump back to for loop
 					j forjinranger
+
 			
 			leaveforloop: 	# print()
 					la $a0, newline
@@ -207,6 +208,9 @@ combination_aux:	# combination_aux funtion
 					lw $t0, 4($t2)
 					sw $t0, 4($t3)
 					
+					# Allocate arguments on stack
+					add $sp, $sp, -24
+			
 					# Pass i+1 as argument
 					addi $sp, $sp, -4
 					lw $t0, +28($fp)
@@ -261,6 +265,12 @@ combination_aux:	# combination_aux funtion
 					# Restores saved $ra off stack
 					lw $ra, ($sp)
 					addi $sp, $sp, +4
+					
+					# Allocate arguments on stack
+					add $sp, $sp, -24
+					
+					# Remove local variables
+					addi $sp, $sp, -4
 					
 					# Pass i+1 as argument
 					addi $sp, $sp, -4
