@@ -175,13 +175,7 @@ finish: # Tier 1
         addi $t1, $0, 100 # t1 = 100
         div $t0, $t1 # t0 / t1
         mflo $t0 # t0 = t0 // t1
-        #sw $t0, dollars # dollars = t0
-
-        #lw $t0, total_bill # t0 = total_bill
-        #addi $t1, $0, 100 # t1 = 100
-        #div $t0, $t1 # t0 / t1
         mfhi $t1 # t2 = t0 % t1
-        #sw $t2, cents # cents = t2
 
         # print(f"Mr Loki Laufeyson, your electricity bill is ${total_bill // 100}.{total_bill % 100}")
         # Print "Mr Loki Laufeyson, your electricity bill is $"
@@ -189,7 +183,6 @@ finish: # Tier 1
         addi $v0, $0, 4
         syscall
         # Print the dollars amount
-        #lw $a0, dollars
         addi $a0, $t0, 0
         addi $v0, $0, 1
         syscall
@@ -198,7 +191,6 @@ finish: # Tier 1
         addi $v0, $0, 4
         syscall
         # Print the cents amount
-        #lw $a0, cents
         addi $a0, $t1, 0
         addi $v0, $0, 1
         syscall
