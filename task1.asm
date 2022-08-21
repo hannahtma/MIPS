@@ -28,6 +28,7 @@ newline: .asciiz "\n"
                 la $a0, start
                 addi $v0, $0, 4
                 syscall
+                # Print newline
                 la $a0, newline
                 addi $v0, $0, 4
                 syscall
@@ -42,22 +43,20 @@ newline: .asciiz "\n"
                 syscall
                 sw $v0, age
 
-                # if age <= 18 (age > 18)
+                # if age <= 18
                 lw $t0, age # t0 = age
                 add $t1, $0, 18 # t1 = 18 
                 slt $t2, $t1, $t0 # if 18 < age, then t2 = 1
-                bne $t2, $0, nodiscount # if t2 != 0, branch to checkhigh
+                bne $t2, $0, nodiscount # if t2 != 0, branch to nodiscount
 
-                # if age >= 65 (age < 65)
-                lw $t0, age
-                addi $t1, $0, 65
+                # if age >= 65
+                lw $t0, age # t0 = age
+                addi $t1, $0, 65 # t1 = 65
                 slt $t2, $t0, $t1 # if age < 65, then t2 = 1
                 bne $t2, $0, nodiscount # if t2 != 0, then branch to nodiscount
 
                 # discount_flag = 1
-                lw $t0, discount_flag
-                addi $t0, $t0, 1
-                sw $t0, discount_flag
+                sw $0, discount_flag
         
                 j continue
 
