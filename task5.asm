@@ -20,8 +20,8 @@ print_combination: 	# print_combination function
             		# fp                 -    0($fp) #
             		# ra                 -   +4($fp) #
             		# arr                -   +8($fp) #
-            		# n	             -  +12($fp) #
-            		# r	             -  +16($fp) #
+            		# n	             	 -  +12($fp) #
+            		# r	             	 -  +16($fp) #
             		##################################
 
 					# Save value of $ra on stack
@@ -108,15 +108,15 @@ combination_aux:	# combination_aux funtion
 
             		        # memory diagram
             		##################################   
-            		# j		     -   -4($fp) #
+            		# j		     		 -   -4($fp) #
             		# fp                 -    0($fp) #
             		# ra                 -   +4($fp) #
             		# arr                -   +8($fp) #
-            		# n	             -  +12($fp) #
-            		# r	             -  +16($fp) #
-            		# index		     -  +20($fp) #
+            		# n	             	 -  +12($fp) #
+            		# r	             	 -  +16($fp) #
+            		# index		     	 -  +20($fp) #
             		# data               -  +24($fp) #
-            		# i		     -  +28($fp) #
+            		# i		     		 -  +28($fp) #
             		##################################
 
 				# Save value of $ra on stack
@@ -308,9 +308,9 @@ main:	# Main program
 	
 			# memory diagram
 		##################################
-		# r		     -  -12($fp) #
-		# n		     -   -8($fp) #
-		# arr		     -   -4($fp) #
+		# r		     		 -  -12($fp) #
+		# n		     		 -   -8($fp) #
+		# arr		     	 -   -4($fp) #
 		# fp                 -    0($fp) #
 		##################################
 
