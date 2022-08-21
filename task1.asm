@@ -76,16 +76,16 @@ continue:   # Print "Enter your total consumption in kWh: "
             sw $v0, consumption
 
             lw $t0, discount_flag
-            beq $t0, $0, normal
             bne $t0, $0, discounted
 
-            normal:
-            # Normal more than 1000kWh
+            # Tier 3 with no discount
+            # if consumption > 1000 and discount_flag == 0:
             addi $t0, $0, 1000 # t0 = 1000
             lw $t1, consumption # t1 = consumption
             slt $t2, $t0, $t1 # if 1000 < consumption, then t2 = 1
             beq $t2, $0, next # if t2 == 0, then branch to next
 
+            # total_cost = total_cost + ((consumption - 1000) * tier_three_price)
             lw $t0, consumption # t0 = consumption
             addi $t1, $0, 1000 # t1 = 1000
             sub $t2, $t0, $t1 # t2 = consumption - 1000
@@ -96,17 +96,20 @@ continue:   # Print "Enter your total consumption in kWh: "
             add $t4, $t0, $t3 # t4 = total_cost + tier_three_price * (consumption-1000)
             sw $t4, total_cost # total_cost = t4
 
+            # consumption = 1000
             addi $t0, $0, 1000 # t0 = 1000
             sw $t0, consumption # consumption = 1000
 
             j next
 
-discounted: # Discounted more than 1000kWh
+discounted: # Tier 3 with discount
+            # elif consumption > 1000:
             addi $t0, $0, 1000 # t0 = 1000
             lw $t1, consumption # t1 = consumption
             slt $t2, $t0, $t1 # if 1000 < consumption, then t2 = 1
             beq $t2, $0, next # if t2 == 0, then branch to next
 
+            # total_cost = total_cost + ((consumption - 1000) * (tier_three_price - 2))
             lw $t0, consumption # t0 = consumption
             addi $t1, $0, 1000 # t1 = 1000
             sub $t2, $t0, $t1 # t2 = consumption - 1000
@@ -118,15 +121,18 @@ discounted: # Discounted more than 1000kWh
             add $t4, $t0, $t3 # t4 = total_cost + (tier_three_price - 2) * (consumption - 1000)
             sw $t4, total_cost # total_cost = t4
 
+            # consumption = 1000
             addi $t0, $0, 1000 # t0 = 1000
             sw $t0, consumption # consumption = 1000
 
-next:   # more than 600
+next:   # Tier 2
+        # if consumption > 600:
         lw $t0, consumption # t0 = consumption
         addi $t1, $0, 600 # t1 = 600
         slt $t2, $t1, $t0 # if 600 < consumption, then t2 = 1
-        beq $t2, $0, finish # if t2 != 0, then branch to finish
+        beq $t2, $0, finish # if t2 == 0, then branch to finish
 
+        # total_cost = total_cost + ((consumption - 600) * tier_two_price)
         lw $t0, consumption # t0 = consumption
         addi $t1, $0, 600 # t1 = 600
         sub $t2, $t0, $t1 # t2 = consumption - 600
@@ -137,10 +143,12 @@ next:   # more than 600
         add $t4, $t0, $t3 # t4 = total_cost + tier_two_price * (consumption - 600)
         sw $t4, total_cost # total_cost = t4
 
+        # consumption = 600
         addi $t0, $0, 600 # t0 = 600
         sw $t0, consumption # consumption = 600
 
-finish: # total_cost = total_cost + (consumption*tier_one_price)
+finish: # Tier 1
+        # total_cost = total_cost + (consumption * tier_one_price)
         lw $t0, consumption # t0 = consumption
         lw $t1, tier_one_price # t1 = tier_one_price
         mult $t0, $t1 # consumption * tier_one_price
@@ -167,27 +175,34 @@ finish: # total_cost = total_cost + (consumption*tier_one_price)
         addi $t1, $0, 100 # t1 = 100
         div $t0, $t1 # t0 / t1
         mflo $t0 # t0 = t0 // t1
-        sw $t0, dollars # dollars = 
+        #sw $t0, dollars # dollars = t0
 
-        lw $t0, total_bill
-        addi $t1, $0, 100
-        div $t0, $t1
-        mfhi $t2
-        sw $t2, cents
+        #lw $t0, total_bill # t0 = total_bill
+        #addi $t1, $0, 100 # t1 = 100
+        #div $t0, $t1 # t0 / t1
+        mfhi $t1 # t2 = t0 % t1
+        #sw $t2, cents # cents = t2
 
-        # Print final amount
-        la $a0, end
+        # print(f"Mr Loki Laufeyson, your electricity bill is ${total_bill // 100}.{total_bill % 100}")
+        # Print "Mr Loki Laufeyson, your electricity bill is $"
+        la $a0, end 
         addi $v0, $0, 4
         syscall
-        lw $a0, dollars
+        # Print the dollars amount
+        #lw $a0, dollars
+        addi $a0, $t0, 0
         addi $v0, $0, 1
         syscall
+        # Print a fullstop
         la $a0, fullstop
         addi $v0, $0, 4
         syscall
-        lw $a0, cents
+        # Print the cents amount
+        #lw $a0, cents
+        addi $a0, $t1, 0
         addi $v0, $0, 1
         syscall
+        # Print newline
         la $a0, newline
         addi $v0, $0, 4
         syscall
