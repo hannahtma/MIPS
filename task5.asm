@@ -50,7 +50,7 @@ print_combination: 	# print_combination function
 			# Store the space to data
 			sw $v0, -4($fp)
 			
-			lw $t0, +12($fp) 
+			lw $t0, +16($fp) 
 			lw $t1, -4($fp)
 			sw $t0, ($t1)
 			
