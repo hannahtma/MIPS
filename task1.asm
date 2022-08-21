@@ -126,7 +126,7 @@ next:   # more than 600
         lw $t0, consumption # t0 = consumption
         addi $t1, $0, 600 # t1 = 600
         slt $t2, $t1, $t0 # if 600 < consumption, then t2 = 1
-        beq $t1, $0, finish # if t2 != 0, then branch to finish
+        beq $t2, $0, finish # if t2 != 0, then branch to finish
 
         lw $t0, consumption # t0 = consumption
         addi $t1, $0, 600 # t1 = 600
